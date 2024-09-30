@@ -22,7 +22,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static DatabaseConnection mInstance = null;
 
-    private static final String DATABASE_NAME = "SencoGold.db";
+    private static final String DATABASE_NAME = "gatemaster.db";
 
 
     private String TAG = "Database";
