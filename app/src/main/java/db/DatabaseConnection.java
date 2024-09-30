@@ -215,4 +215,9 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     }
 
 
+    //Edited by Aayush -
+    public void save_checkin(){
+
+    }
+
 }
