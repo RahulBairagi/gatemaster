@@ -1,6 +1,8 @@
 package com.example.gatemaster.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +22,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private ProgressWheel progresswheel;
 
     private EditText userid,password,store;
-    private Button login;
+    private Button loginBtn, fgtbtn;
 
 
     @Override
@@ -31,16 +33,38 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
     }
     private void initData(){
         inflateView(R.layout.login_portrait);
-        store = (EditText) findViewById(R.id.store);
         userid = (EditText) findViewById(R.id.userid);
         password = (EditText) findViewById(R.id.password);
         progressLayout = (View) findViewById(R.id.progressLayout);
         progresswheel = (ProgressWheel) findViewById(R.id.progresswheel);
-        Button loginBtn = (Button) findViewById(R.id.btn_signIn);
+        loginBtn = (Button) findViewById(R.id.btn_signIn).findViewById(R.id.btn);
+        fgtbtn = (Button) findViewById(R.id.btn_fgtpwd).findViewById(R.id.btn);
+
+        fgtbtn.setText("Forgot Password");
         loginBtn.setOnClickListener(this::onClick);
+        loginBtn.setText("Login");
 //        store.setText("Store");
 //        userid.setText("Sighpad1");
 //        password.setText("123456");
+        userid.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.length() > 0) {
+                    userid.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                } else {
+                    userid.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+
     }
 
     private boolean validate() {

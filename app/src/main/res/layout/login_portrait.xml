@@ -4,7 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ProgressWheel="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@drawable/bgsenco"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
@@ -20,54 +19,33 @@
             >
 
             <ImageView
-                android:id="@+id/senco_img"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_width="@dimen/_200sdp"
-                android:layout_height="@dimen/_70sdp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/senco_logo" />
-
-            <Button
-                android:id="@+id/btn_signIn"
-                android:layout_width="@dimen/_180sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/rounded_edittext_bg"
-                android:paddingLeft="@dimen/_50sdp"
-                android:paddingRight="@dimen/_50sdp"
+                android:id="@+id/gatex_img"
                 android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:text="Login"
+                android:layout_width="@dimen/_250sdp"
+                android:layout_height="@dimen/_200sdp"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="@dimen/_30sdp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/gatemasterx" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guard App V 1.0"
+                android:textSize="@dimen/_15sdp"
+                android:id="@+id/versiontxt"
                 android:textColor="#000"
-                android:textSize="@dimen/_13sdp" />
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:layout_alignParentBottom="true"/>
 
             <LinearLayout
-                android:layout_width="@dimen/_300sdp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/btn_signIn"
-                android:layout_below="@+id/senco_img"
                 android:layout_centerInParent="true"
+                android:layout_below="@id/gatex_img"
                 android:gravity="center"
                 android:orientation="vertical">
-
-                <EditText
-                    android:id="@+id/store"
-                    android:layout_width="@dimen/_270sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_50sdp"
-                    android:background="@drawable/rounded_edittext_bg"
-                    android:drawableLeft="@color/white"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:hint="Store"
-                    android:inputType="text"
-                    android:singleLine="true"
-                    android:textColor="#000"
-                    android:textColorHint="#000"
-                    android:textSize="@dimen/_12ssp"
-                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/userid"
@@ -75,6 +53,7 @@
                     android:layout_height="@dimen/_40sdp"
                     android:background="@drawable/rounded_edittext_bg"
                     android:drawableLeft="@color/white"
+                    android:backgroundTint="#DEDEDE"
                     android:drawablePadding="@dimen/_10sdp"
                     android:hint="User Id"
                     android:inputType="textEmailSubject"
@@ -88,9 +67,10 @@
                     android:id="@+id/password"
                     android:layout_width="@dimen/_270sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_marginTop="@dimen/_50sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:background="@drawable/rounded_edittext_bg"
                     android:drawableLeft="@color/white"
+                    android:backgroundTint="#DEDEDE"
                     android:drawablePadding="@dimen/_10sdp"
                     android:hint="Password"
                     android:inputType="textPassword"
@@ -99,6 +79,49 @@
                     android:textColorHint="#000"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold" />
+
+                <!--<Button
+                    android:id="@+id/btn_signIn"
+                    android:layout_width="@dimen/_180sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/rounded_edittext_bg"
+                    android:paddingLeft="@dimen/_50sdp"
+                    android:backgroundTint="#74649c"
+                    android:paddingRight="@dimen/_50sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:text="Login"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/_12sdp" />
+-->
+                <include
+                    layout="@layout/button_gatex"
+                    android:id="@+id/btn_signIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    />
+
+                <include
+                    layout="@layout/button_gatex"
+                    android:id="@+id/btn_fgtpwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    />
+
+                <!--<Button
+                    android:id="@+id/btn_fgtpwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/rounded_edittext_bg"
+                    android:paddingLeft="@dimen/_50sdp"
+                    android:backgroundTint="#74649c"
+                    android:paddingRight="@dimen/_50sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:text="Forgot Password"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/_12sdp" />-->
             </LinearLayout>
 
 
