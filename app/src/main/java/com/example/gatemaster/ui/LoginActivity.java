@@ -69,11 +69,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     private boolean validate() {
         boolean flag = true;
-        if (store.getText().toString().isEmpty()){
-            flag = false;
-            Util.showToast(this, "Please enter the store");
-        }
-        else if(userid.getText().toString().isEmpty()){
+        if(userid.getText().toString().isEmpty()){
             flag = false;
             Util.showToast(this, "Please enter the userid");
         } else if (password.getText().toString().isEmpty()) {
