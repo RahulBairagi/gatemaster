@@ -41,7 +41,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         fgtbtn = (Button) findViewById(R.id.btn_fgtpwd).findViewById(R.id.btn);
 
         fgtbtn.setText("Forgot Password");
-        loginBtn.setOnClickListener(this::onClick);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.pushNext(LoginActivity.this,HomeActivity.class);
+            }
+        });
         loginBtn.setText("Login");
 //        store.setText("Store");
 //        userid.setText("Sighpad1");

@@ -182,7 +182,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         contentValues.put("invoiceID",invoiceID);
         contentValues.put("custAcct",custAcct);
         contentValues.put("post","0");
-        sq.update("SignatureDetail", contentValues, "id=?", new String[]{HomeActivity.SIGNATUREID});
+//        sq.update("SignatureDetail", contentValues, "id=?", new String[]{HomeActivity.SIGNATUREID});
     }
    public Cursor getSignatureDetails(){
         sq = this.getReadableDatabase();
@@ -202,7 +202,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("post", post);
-        sq.update("SignatureDetail", contentValues, "id= ?", new String[]{HomeActivity.SIGNATUREID});
+//        sq.update("SignatureDetail", contentValues, "id= ?", new String[]{HomeActivity.SIGNATUREID});
     }
 
     public void deleteBlankSign() {

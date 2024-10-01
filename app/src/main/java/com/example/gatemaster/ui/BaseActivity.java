@@ -265,7 +265,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (cursor.getBlob(2) != null) {
                     signature = Base64.encodeToString(cursor.getBlob(2), Base64.DEFAULT);
                 }
-                HomeActivity.SIGNATUREID = id;
                 SignatureDetailRequest signatureDetailRequest = new SignatureDetailRequest();
                 signatureDetailRequest.setInvoiceId(invoiceId);
                 signatureDetailRequest.setCustAccount(custAcct);

@@ -23,6 +23,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_width="@dimen/_250sdp"
                 android:layout_height="@dimen/_200sdp"
+                android:src="@drawable/gatemasterx"
                 android:layout_alignParentTop="true"
                 android:layout_marginBottom="@dimen/_30sdp"
                 android:layout_centerHorizontal="true"
@@ -80,20 +81,6 @@
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold" />
 
-                <!--<Button
-                    android:id="@+id/btn_signIn"
-                    android:layout_width="@dimen/_180sdp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:background="@drawable/rounded_edittext_bg"
-                    android:paddingLeft="@dimen/_50sdp"
-                    android:backgroundTint="#74649c"
-                    android:paddingRight="@dimen/_50sdp"
-                    android:layout_marginTop="@dimen/_50sdp"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:text="Login"
-                    android:textColor="#fff"
-                    android:textSize="@dimen/_12sdp" />
--->
                 <include
                     layout="@layout/button_gatex"
                     android:id="@+id/btn_signIn"
@@ -110,18 +97,6 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     />
 
-                <!--<Button
-                    android:id="@+id/btn_fgtpwd"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_40sdp"
-                    android:background="@drawable/rounded_edittext_bg"
-                    android:paddingLeft="@dimen/_50sdp"
-                    android:backgroundTint="#74649c"
-                    android:paddingRight="@dimen/_50sdp"
-                    android:layout_marginBottom="@dimen/_20sdp"
-                    android:text="Forgot Password"
-                    android:textColor="#fff"
-                    android:textSize="@dimen/_12sdp" />-->
             </LinearLayout>
 
 
