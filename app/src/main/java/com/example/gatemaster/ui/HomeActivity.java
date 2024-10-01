@@ -19,8 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import adapter.AlertAdapter;
 import adapter.CustomerDetailAdapter;
 import busevent.InvoiceBusEvent;
+import model.AlertItem;
 import model.CustomerDetailModel;
 import utils.ProgressWheel;
 import utils.SpacesItemDecoration;
@@ -29,8 +31,8 @@ import utils.Util;
 public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter.ItemClickListener{
 
     private RecyclerView recyclerView;
-    private CustomerDetailAdapter adapter;
-    private ArrayList<CustomerDetailModel> customerDetailModelArrayList;
+    private AlertAdapter adapter;
+    private ArrayList<AlertItem> alertItems;
     private View progressLayout;
     private ProgressWheel progresswheel;
 
@@ -77,7 +79,7 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
             recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);
             recyclerView.setLayoutManager(layoutManager);
-            customerDetailModelArrayList = new ArrayList<>();
+            alertItems = new ArrayList<>();
 
         }catch (Exception e){
             e.getMessage();
