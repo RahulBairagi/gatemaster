@@ -40,18 +40,11 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
     View checkOutVisitorLayout ;
     View checkInPackageLayout ;
     View checkOutPackageLayout ;
-
-
-
-
-
-    // Get the Button inside the included layout and set the text
-
-
     @Override
     protected void create(Bundle bundle) {
         inflateView(R.layout.home_portrait);
         init();
+        initRecycleView();
     }
 
     private void init(){
@@ -74,18 +67,26 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
     }
 
 
-    private void initRecycleView(){
+    private void initRecycleView() {
         try {
-            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            recyclerView = findViewById(R.id.recyclerView);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(HomeActivity.this);
             recyclerView.setLayoutManager(layoutManager);
+
             alertItems = new ArrayList<>();
 
-        }catch (Exception e){
-            e.getMessage();
+            alertItems.add(new AlertItem("Security Alert", "Suspicious activity detected"));
+            alertItems.add(new AlertItem("Visitor Check-In", "John Doe checked in"));
+            alertItems.add(new AlertItem("Package Received", "Package from Amazon delivered"));
+            alertItems.add(new AlertItem("Fire Alarm", "Fire alarm triggered in Sector A"));
+            alertItems.add(new AlertItem("System Update", "Security system update required"));
 
+            AlertAdapter alertAdapter = new AlertAdapter(alertItems);
+            recyclerView.setAdapter(alertAdapter);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
 
