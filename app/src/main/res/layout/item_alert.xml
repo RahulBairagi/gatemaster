@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/rounded_background"> <!-- Set the background here -->
+
+    <!-- Circle Icon -->
+    <ImageView
+        android:id="@+id/iconImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="Icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Header Text -->
+    <TextView
+        android:id="@+id/headerTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Header"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/alertImageView"
+        app:layout_constraintHorizontal_chainStyle="spread_inside" />
+
+    <!-- Subheader Text -->
+    <TextView
+        android:id="@+id/subheaderTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Subheader"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toEndOf="@+id/iconImageView"
+        app:layout_constraintTop_toBottomOf="@+id/headerTextView"
+        app:layout_constraintEnd_toStartOf="@+id/alertImageView"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Alert Icon -->
+    <ImageView
+        android:id="@+id/alertImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="Alert Icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,82 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    tools:context="com.example.gatemaster.ui.HomeActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        android:elevation="@dimen/_4sdp">
-
-        <TextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Home"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_15sdp"
-            android:textStyle="bold" />
-
-
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <LinearLayout
-        android:id="@+id/layout_invoices"
-        android:layout_below="@+id/toolbar"
-        android:layout_width="match_parent"
+    <!-- Menu Icon -->
+    <ImageView
+        android:id="@+id/menuIcon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="@dimen/_8sdp"
-        android:background="#ffff">
+        android:src="@drawable/ic_menu"
+        android:contentDescription="Menu"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Invoices"
-            android:textSize="@dimen/_13sdp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-black"
-            android:layout_weight="1"/>
-
-        <Button
-            android:id="@+id/btn_get_invoice"
-            android:layout_width="@dimen/_80sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:backgroundTint="#ff1933"
-            android:background="@drawable/rounded_edittext_bg"
-            android:text="Get Invoice"
-            android:textSize="@dimen/_10sdp"
-            android:textColor="@android:color/white"
-            android:layout_gravity="end" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_below="@+id/layout_invoices"
-        android:layout_width="match_parent"
+    <!-- Profile Icon -->
+    <ImageView
+        android:id="@+id/profileIcon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:src="@drawable/ic_profile"
+        android:contentDescription="Profile"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Home Page Title -->
+    <TextView
+        android:id="@+id/homePageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home Page"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@+id/menuIcon"
+        app:layout_constraintStart_toEndOf="@+id/menuIcon"
+        app:layout_constraintEnd_toStartOf="@+id/profileIcon"
+        app:layout_constraintBottom_toTopOf="@+id/liveAlertsTitle"
+        app:layout_constraintHorizontal_chainStyle="spread" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_5sdp"
-            android:id="@+id/homeListRv"
-            >
+    <!-- Live Alerts Title -->
+    <TextView
+        android:id="@+id/liveAlertsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Live Alerts"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/homePageTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        </androidx.recyclerview.widget.RecyclerView>
+    <!-- RecyclerView for Alerts (Header and Subheader) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_margin="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@+id/liveAlertsTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/visitorSectionTitle"
+        tools:listitem="@layout/item_alert" />
 
+    <!-- Visitor Section Title -->
+    <TextView
+        android:id="@+id/visitorSectionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Visitor"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    </LinearLayout>
+    <!-- Visitor Check In Button -->
+    <include
+        layout="@layout/button_gatex"
+        android:id="@+id/checkInVisitor"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/visitorSectionTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkOutVisitor" />
 
-</RelativeLayout>
+    <!-- Visitor Check Out Button -->
+    <include
+        layout="@layout/button_gatex"
+        android:id="@+id/checkOutVisitor"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/visitorSectionTitle"
+        app:layout_constraintStart_toEndOf="@+id/checkInVisitor"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Package Section Title -->
+    <TextView
+        android:id="@+id/packageSectionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Package / Other"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/checkInVisitor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Package Check In Button -->
+    <include
+        layout="@layout/button_gatex"
+        android:id="@+id/checkInPackage"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/packageSectionTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/checkOutPackage" />
+
+    <!-- Package Check Out Button -->
+    <include
+        layout="@layout/button_gatex"
+        android:id="@+id/checkOutPackage"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/packageSectionTitle"
+        app:layout_constraintStart_toEndOf="@+id/checkInPackage"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Panic Button -->
+    <Button
+        android:id="@+id/panicButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="PANIC"
+        android:backgroundTint="@color/red"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/checkInPackage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
