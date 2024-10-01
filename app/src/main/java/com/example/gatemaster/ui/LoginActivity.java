@@ -17,11 +17,11 @@ import db.DatabaseConnection;
 import utils.ProgressWheel;
 import utils.Util;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
     private View progressLayout;
     private ProgressWheel progresswheel;
 
-    private EditText userid,password,store;
+    private EditText userid, password, store;
     private Button loginBtn, fgtbtn;
 
 
@@ -31,7 +31,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         initData();
 
     }
-    private void initData(){
+
+    private void initData() {
         inflateView(R.layout.login_portrait);
         userid = (EditText) findViewById(R.id.userid);
         password = (EditText) findViewById(R.id.password);
@@ -40,17 +41,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
         loginBtn = (Button) findViewById(R.id.btn_signIn).findViewById(R.id.btn);
         fgtbtn = (Button) findViewById(R.id.btn_fgtpwd).findViewById(R.id.btn);
 
+        loginBtn.setText("Login");
         fgtbtn.setText("Forgot Password");
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.pushNext(LoginActivity.this,HomeActivity.class);
+                Util.pushNext(LoginActivity.this, HomeActivity.class);
             }
         });
-        loginBtn.setText("Login");
-//        store.setText("Store");
-//        userid.setText("Sighpad1");
-//        password.setText("123456");
+
+        fgtbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.pushNext(LoginActivity.this, ForgotPasswordActivity.class);
+            }
+        });
+
         userid.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -62,7 +69,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length() > 0) {
+                if (s.length() > 0) {
                     userid.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
                 } else {
                     userid.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -74,55 +81,54 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     private boolean validate() {
         boolean flag = true;
-        if(userid.getText().toString().isEmpty()){
+        if (userid.getText().toString().isEmpty()) {
             flag = false;
             Util.showToast(this, "Please enter the userid");
         } else if (password.getText().toString().isEmpty()) {
             flag = false;
-            Util.showToast(this,"Please enter the password");
+            Util.showToast(this, "Please enter the password");
         }
         return flag;
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_signIn:{
+        switch (v.getId()) {
+            case R.id.btn_signIn: {
                 loginBtnCLick();
             }
             break;
         }
     }
-    private void loginBtnCLick(){
-            Util.hideKeyBoard(LoginActivity.this);
-            if (Util.isNetworkAvailable(this)){
-                if (validate()){
-                    showProgress();
-                    executeLoginApi(userid.getText().toString(),password.getText().toString(),"");
-                }
-            }else {
-                Util.showOKAlert(this,"Please check your internet connection and try again later");
+
+    private void loginBtnCLick() {
+        Util.hideKeyBoard(LoginActivity.this);
+        if (Util.isNetworkAvailable(this)) {
+            if (validate()) {
+                showProgress();
+                executeLoginApi(userid.getText().toString(), password.getText().toString(), "");
             }
+        } else {
+            Util.showOKAlert(this, "Please check your internet connection and try again later");
+        }
 
     }
 
     @Subscribe
-    public void onEvent(LoginBusEvent loginBusEvent){
+    public void onEvent(LoginBusEvent loginBusEvent) {
         hideProgress();
 
-        if (loginBusEvent.getStrEvent() == "YES"){
-            if(loginBusEvent.getActive()==1&&loginBusEvent.getStatus().equalsIgnoreCase("User Found")){
-                Util.pushNext(this,HomeActivity.class);
-            }else
-            {
-                Toast.makeText(this,loginBusEvent.getStatus(),Toast.LENGTH_SHORT).show();
+        if (loginBusEvent.getStrEvent() == "YES") {
+            if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("User Found")) {
+                Util.pushNext(this, HomeActivity.class);
+            } else {
+                Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
             }
-            }
-
-        else {
-            Toast.makeText(this,"Please try again later",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Please try again later", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override
     public void onBackPressed() {
         finish();

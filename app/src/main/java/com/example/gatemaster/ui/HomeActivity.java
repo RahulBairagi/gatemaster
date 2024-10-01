@@ -28,7 +28,7 @@ import utils.ProgressWheel;
 import utils.SpacesItemDecoration;
 import utils.Util;
 
-public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter.ItemClickListener{
+public class HomeActivity extends BaseActivity implements CustomerDetailAdapter.ItemClickListener {
 
     private RecyclerView recyclerView;
     private AlertAdapter adapter;
@@ -36,10 +36,11 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
     private View progressLayout;
     private ProgressWheel progresswheel;
 
-    View checkInVisitorLayout ;
-    View checkOutVisitorLayout ;
-    View checkInPackageLayout ;
-    View checkOutPackageLayout ;
+    View checkInVisitorLayout;
+    View checkOutVisitorLayout;
+    View checkInPackageLayout;
+    View checkOutPackageLayout;
+
     @Override
     protected void create(Bundle bundle) {
         inflateView(R.layout.home_portrait);
@@ -47,9 +48,9 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
         initRecycleView();
     }
 
-    private void init(){
-         checkInVisitorLayout = findViewById(R.id.checkInVisitor);
-         checkOutVisitorLayout = findViewById(R.id.checkOutVisitor);
+    private void init() {
+        checkInVisitorLayout = findViewById(R.id.checkInVisitor);
+        checkOutVisitorLayout = findViewById(R.id.checkOutVisitor);
         checkInPackageLayout = findViewById(R.id.checkInPackage);
         checkOutPackageLayout = findViewById(R.id.checkOutPackage);
 
@@ -95,9 +96,8 @@ public class HomeActivity extends BaseActivity implements  CustomerDetailAdapter
         Log.d("HomeActivity" + "position:::", position + "");
 
 
-       //Util.pushNext(HomeActivity.this,SignActivity.class);
+        //Util.pushNext(HomeActivity.this,SignActivity.class);
     }
-
 
 
 }

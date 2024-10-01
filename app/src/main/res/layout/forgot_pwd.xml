@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/gatex_logo"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:src="@drawable/gatemasterx" />
+
+    <TextView
+        android:id="@+id/frgtpwdtitletxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gatex_logo"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Forgot Password"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/_15sdp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/frgtpwddesctxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frgtpwdtitletxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:gravity="center"
+        android:padding="@dimen/_5sdp"
+        android:text="OTP will be sent to your registered Mobile Number - "
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/phnnumtxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/frgtpwddesctxt"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="@dimen/_5sdp"
+        android:text="+91 912*******"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal" />
+
+
+    <EditText
+        android:id="@+id/otptxtinp"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phnnumtxt"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:background="@drawable/rounded_background"
+        android:gravity="center"
+        android:hint="Enter OTP"
+        android:inputType="phone"
+        android:padding="@dimen/_8sdp"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/_13sdp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/_100sdp"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/sendotpbtn"
+            layout="@layout/button_gatex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_weight="1" />
+
+        <include
+            android:id="@+id/verifyotpbtn"
+            layout="@layout/button_gatex"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/pwdlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phnnumtxt"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_50sdp"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+
+        <EditText
+            android:id="@+id/newpwdtxtinp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/rounded_background"
+            android:gravity="center"
+            android:hint="Enter new Password"
+            android:inputType="textPassword"
+            android:padding="@dimen/_8sdp"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/_13sdp" />
+
+        <EditText
+            android:id="@+id/cnfpwdtxtinp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/rounded_background"
+            android:gravity="center"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:padding="@dimen/_8sdp"
+            android:textColor="@color/grey"
+            android:textSize="@dimen/_13sdp" />
+
+
+        <include
+            android:id="@+id/chngepwdbtn"
+            layout="@layout/button_gatex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
