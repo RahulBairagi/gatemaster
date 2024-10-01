@@ -65,6 +65,13 @@ public class HomeActivity extends BaseActivity implements CustomerDetailAdapter.
 
         Button checkOutButtonPk = checkOutPackageLayout.findViewById(R.id.btn);
         checkOutButtonPk.setText("Check Out");
+
+        checkInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.pushNext(HomeActivity.this, VisitorCheckInActivity.class);
+            }
+        });
     }
 
 
