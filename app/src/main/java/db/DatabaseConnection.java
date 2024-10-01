@@ -175,15 +175,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         }
     }
 
-    public void updateCustomerSign(byte[] byteArraySign,String invoiceID,String custAcct) {
-        sq = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("signature", byteArraySign);
-        contentValues.put("invoiceID",invoiceID);
-        contentValues.put("custAcct",custAcct);
-        contentValues.put("post","0");
-        sq.update("SignatureDetail", contentValues, "id=?", new String[]{HomeActivity.SIGNATUREID});
-    }
    public Cursor getSignatureDetails(){
         sq = this.getReadableDatabase();
         Cursor res = sq.rawQuery("select invoiceID from SignatureDetail",null);
@@ -197,13 +188,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     }
 
-    public void updatePost(String post) {
-        sq = this.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("post", post);
-        sq.update("SignatureDetail", contentValues, "id= ?", new String[]{HomeActivity.SIGNATUREID});
-    }
 
     public void deleteBlankSign() {
         sq = this.getWritableDatabase();

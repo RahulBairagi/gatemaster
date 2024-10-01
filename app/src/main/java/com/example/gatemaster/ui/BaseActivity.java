@@ -253,57 +253,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
-    public void postSignatureDetailApi() {
-        Cursor cursor = databaseConnection.getCustomerSignatureDetail();
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
-                String invoiceId = cursor.getString(cursor.getColumnIndexOrThrow("invoiceID"));
-                String custAcct = cursor.getString(cursor.getColumnIndexOrThrow("custAcct"));
-                String signature = "";
-                if (cursor.getBlob(2) != null) {
-                    signature = Base64.encodeToString(cursor.getBlob(2), Base64.DEFAULT);
-                }
-                HomeActivity.SIGNATUREID = id;
-                SignatureDetailRequest signatureDetailRequest = new SignatureDetailRequest();
-                signatureDetailRequest.setInvoiceId(invoiceId);
-                signatureDetailRequest.setCustAccount(custAcct);
-                signatureDetailRequest.setSignature(signature);
-                Call<SignatureDataModel> signatureDataModelCall = sencoApi.postSignatureDetails(signatureDetailRequest);
-
-                signatureDataModelCall.enqueue(new Callback<SignatureDataModel>() {
-                    boolean isSuccess;
-
-                    @Override
-                    public void onResponse(Call<SignatureDataModel> call, Response<SignatureDataModel> response) {
-
-                        Log.d("BASE-URL", "postSignDetail: ==============>url - "
-                                + call.request().url() + " ===============>" + bodyToString(call.request().body()));
-                        if (response.code() == 200) {
-                            isSuccess = true;
-
-
-                        } else {
-                            isSuccess = false;
-                        }
-                        if (isSuccess) {
-                            EventBus.getDefault().post(new SignatureBusEvent("YES"));
-                        } else {
-                            EventBus.getDefault().post(new SignatureBusEvent("NO"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SignatureDataModel> call, Throwable t) {
-                        EventBus.getDefault().post(new SignatureBusEvent("NO"));
-                    }
-                });
-            }
-        }
-
-
-    }
 
     public void executeVersionDetailApi() {
         VersionDetailRequest versionDetailRequest = new VersionDetailRequest();
