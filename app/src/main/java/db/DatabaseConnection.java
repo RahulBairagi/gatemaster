@@ -43,7 +43,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     }
 
 
-    private static final String CREATE_TABLE_USERDETAIL= " create table if not exists UserDetail(userid text,terminal text,active int,status text);";
+    private static final String CREATE_TABLE_USERDETAIL= " create table if not exists UserDetail(userid text,name text,email text,mobile text);";
 
     private static final String CREATE_TABLE_INVOICEDETAIL=" create table if not exists InvoiceDetail(userid text,terminal text, customerAcct text, transactionId text, customerName text, signatureNotRequired text);";
 
@@ -77,14 +77,14 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void insertUserDetails(String userid,String terminal, Integer active,String status ){
+    public void insertUserDetails(String userid,String name, String email,String mobile ){
         sq = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         try {
             contentValues.put("userid",userid);
-            contentValues.put("terminal",terminal);
-            contentValues.put("active",active);
-            contentValues.put("status",status);
+            contentValues.put("name",userid);
+            contentValues.put("email",userid);
+            contentValues.put("mobile",userid);
             long i= sq.insert("UserDetail",null,contentValues);
             Log.d(TAG, "UserDetail: ex =============>" + i);
         }catch (Exception e){

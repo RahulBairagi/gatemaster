@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import busevent.VersionBusEvent;
-import retrofit.SencoApi;
+import retrofit.GateApi;
 import retrofit.ServiceGenerator;
 import utils.Constant;
 import utils.Util;
@@ -104,7 +104,7 @@ public class SplashActivity extends BaseActivity  implements View.OnClickListene
                 if (isValidIPAddress(inputText)){
                     MAINURL = "http://"+inputText+"/api/";
                     Constant.BASE_URL =MAINURL ;
-                    sencoApi = ServiceGenerator.createService(SencoApi.class, "", "");
+                    gateApi = ServiceGenerator.createService(GateApi.class, "", "");
                     showProgress();
                         executeVersionDetailApi();
                 }else {

@@ -2,7 +2,7 @@ package utils;
 
 public class Constant {
     public static final String SHARED_PREF_NAME = "JSHARED_PREFS";
-    public static  String BASE_URL ="";
+    public static  String BASE_URL ="http://api.gatecontrolx.com:9000/api/v1/";
     //"http://125.63.88.147:7401/api/  local acxiom
 //    http://125.63.88.147:2047/api/ 16-02-24
 
@@ -10,7 +10,7 @@ public class Constant {
 //    http://13.71.25.15:85/api/GetData/LoginAPI
 
 
-    public static final String PREF_AUTH_TOKEN = "PREF_AUTH_TOKEN";
+    public static String PREF_AUTH_TOKEN = "PREF_AUTH_TOKEN";
 
     public static int totalapicount = 0;
     public static int apicountreto = 0;

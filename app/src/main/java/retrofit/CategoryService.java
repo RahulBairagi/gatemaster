@@ -12,10 +12,10 @@ public class CategoryService {
     @Inject
     SharedPref sharedPref;
 
-    private final SencoApi sencoApi;
+    private final GateApi gateApi;
 
-    public CategoryService(SencoApi sencoApi) {
-        this.sencoApi = sencoApi;
+    public CategoryService(GateApi gateApi) {
+        this.gateApi = gateApi;
         GateMasterApplication.getComponent().injects(this);
     }
 

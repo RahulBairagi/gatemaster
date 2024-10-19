@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/tabhome"
+        android:title="Home"
+        android:icon="@drawable/home_26"/>
+    <item
+        android:id="@+id/tabvisitor"
+        android:title="Visitor"
+        android:icon="@drawable/visitor_32"/>
+    <item
+        android:id="@+id/tabnotification"
+        android:title="Notifications"
+        android:icon="@drawable/notify"/>
+</menu>

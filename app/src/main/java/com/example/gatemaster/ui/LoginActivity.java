@@ -17,7 +17,7 @@ import db.DatabaseConnection;
 import utils.ProgressWheel;
 import utils.Util;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity {
     private View progressLayout;
     private ProgressWheel progresswheel;
 
@@ -44,10 +44,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginBtn.setText("Login");
         fgtbtn.setText("Forgot Password");
 
+//        userid.setText("EMP-001");
+//        password.setText("123456");
+
+        fgtbtn.setVisibility(View.GONE);
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Util.pushNext(LoginActivity.this, HomeActivity.class);
+                if (validate()){
+                    loginBtnCLick();
+                }
             }
         });
 
@@ -91,22 +98,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         return flag;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_signIn: {
-                loginBtnCLick();
-            }
-            break;
-        }
-    }
-
     private void loginBtnCLick() {
         Util.hideKeyBoard(LoginActivity.this);
         if (Util.isNetworkAvailable(this)) {
             if (validate()) {
                 showProgress();
-                executeLoginApi(userid.getText().toString(), password.getText().toString(), "");
+                executeLoginApi(userid.getText().toString(), password.getText().toString());
             }
         } else {
             Util.showOKAlert(this, "Please check your internet connection and try again later");
@@ -119,7 +116,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         hideProgress();
 
         if (loginBusEvent.getStrEvent() == "YES") {
-            if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("User Found")) {
+            if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK")) {
                 Util.pushNext(this, HomeActivity.class);
             } else {
                 Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();

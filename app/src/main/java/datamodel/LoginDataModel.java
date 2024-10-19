@@ -1,88 +1,100 @@
 package datamodel;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.annotation.processing.Generated;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
-        "userid",
-        "terminal",
-        "active",
-        "status",
+        "statusCode",
+        "title",
+        "message",
+        "responseData",
         "error"
 })
-
+@Generated("jsonschema2pojo")
 public class LoginDataModel {
 
-    @JsonProperty("userid")
-    private String userid;
-    @JsonProperty("terminal")
-    private String terminal;
-
-    @JsonProperty("active")
-    private boolean active;
-
-    @JsonProperty("status")
-    private String status;
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
+    @JsonProperty("statusCode")
+    private String statusCode;
+    @JsonProperty("title")
+    private String title;
+    @JsonProperty("message")
+    private String message;
+    @JsonProperty("responseData")
+    private ResponseData responseData;
     @JsonProperty("error")
-    private String error;
-
-
+    private List<Object> error;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    @JsonProperty("userid")
-    public String getUserid() {
-        return userid;
+    @JsonProperty("statusCode")
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    @JsonProperty("userid")
-    public void setUserid(String userid) {
-        this.userid = userid;
+    @JsonProperty("statusCode")
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 
-    @JsonProperty("terminal")
-    public String getTerminal() {
-        return terminal;
+    @JsonProperty("title")
+    public String getTitle() {
+        return title;
     }
 
-    @JsonProperty("terminal")
-    public void setTerminal(String terminal) {
-        this.terminal = terminal;
+    @JsonProperty("title")
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    @JsonProperty("active")
-    public boolean getActive() {
-        return active;
+    @JsonProperty("message")
+    public String getMessage() {
+        return message;
     }
 
-    @JsonProperty("active")
-    public void setActive(boolean active) {
-        this.active = active;
+    @JsonProperty("message")
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    @JsonProperty("status")
-    public String getStatus() {
-        return status;
+    @JsonProperty("responseData")
+    public ResponseData getResponseData() {
+        return responseData;
     }
 
-    @JsonProperty("status")
-    public void setStatus(String status) {
-        this.status = status;
+    @JsonProperty("responseData")
+    public void setResponseData(ResponseData responseData) {
+        this.responseData = responseData;
     }
 
+    @JsonProperty("error")
+    public List<Object> getError() {
+        return error;
+    }
+
+    @JsonProperty("error")
+    public void setError(List<Object> error) {
+        this.error = error;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 
 }

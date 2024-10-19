@@ -41,7 +41,7 @@ import datamodel.VersionDetailRequest;
 import db.DatabaseConnection;
 import okhttp3.RequestBody;
 import okio.Buffer;
-import retrofit.SencoApi;
+import retrofit.GateApi;
 import retrofit.ServiceGenerator;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,12 +64,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ProgressWheel progresswheel;
     protected LayoutInflater inflator = null;
 
-    public SencoApi sencoApi;
+    public GateApi gateApi;
 
     public LayoutInflater getInflator() {
         return inflator;
     }
-
 
     protected View inflateView(int layoutId) {
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
@@ -91,7 +90,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             Constant.BASE_URL = baseUrl;
         }
         if (Constant.BASE_URL.length() > 0) {
-            sencoApi = ServiceGenerator.createService(SencoApi.class, "", "");
+            gateApi = ServiceGenerator.createService(GateApi.class, "", "");
         }
         create(savedInstanceState);
     }
@@ -121,14 +120,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void apicall() {
     }
 
-    public void executeLoginApi(String userID, String password, String storeID) {
+    public void executeLoginApi(String userID, String password) {
 
         UserDetailRequest userDetailRequest = new UserDetailRequest();
-        userDetailRequest.setUserid(userID);
-        userDetailRequest.setPassword(password);
-        userDetailRequest.setStore(storeID);
+        userDetailRequest.setEmployeeId(userID);
+        userDetailRequest.setEmployeePin(password);
 
-        Call<LoginDataModel> loginDataModelCall = sencoApi.userValidate(userDetailRequest);
+        Call<LoginDataModel> loginDataModelCall = gateApi.userValidate(userDetailRequest);
 
         loginDataModelCall.enqueue(new Callback<LoginDataModel>() {
             boolean isSuccess;
@@ -138,33 +136,39 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onResponse(Call<LoginDataModel> call, Response<LoginDataModel> response) {
                 if (response.code() == 200) {
                     Log.d("BASE-URL", "LoginApi: ==============>url - "
-                            + call.request().url() + " ===============>" + bodyToString(call.request().body()));
-                    if (response.body().getActive()) {
-                        active = 1;
-                    } else {
-                        active = 0;
+                            + call.request().url() + " ===============>" + call.request().body().toString());
+                    if (response.body().getTitle().equalsIgnoreCase("OK")) {
+                        isSuccess = true;
                     }
-                    isSuccess = true;
+                    else {
+                        isSuccess = false;
+                    }
                 } else {
                     isSuccess = false;
                 }
 
                 if (isSuccess) {
                     databaseConnection.deleteTable("UserDetail");
-                    sharedPref.save("userid", response.body().getUserid());
-                    sharedPref.save("terminal", response.body().getTerminal());
-                    databaseConnection.insertUserDetails(response.body().getUserid(), response.body().getTerminal(), active, response.body().getStatus());
-                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getStatus()));
+                    active = 1;
+                    sharedPref.save("userid", response.body().getResponseData().getUser().getEmployeeId());
+                    sharedPref.save("useremail", response.body().getResponseData().getUser().getEmail());
+                    sharedPref.save("userph", response.body().getResponseData().getUser().getMobile());
+                    sharedPref.save("username", response.body().getResponseData().getUser().getName());
+                    databaseConnection.insertUserDetails(response.body().getResponseData().getUser().getEmployeeId(), response.body().getResponseData().getUser().getName(), response.body().getResponseData().getUser().getEmail(), response.body().getResponseData().getUser().getMobile());
+                    Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
+                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
-                    EventBus.getDefault().post(new LoginBusEvent("NO", active, response.body().getStatus()));
+                    active = 0;
+                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.message()));
                 }
             }
 
             @Override
             public void onFailure(Call<LoginDataModel> call, Throwable t) {
                 isSuccess = false;
-                EventBus.getDefault().post(new LoginBusEvent("NO", active, "User Not Found"));
-            }
+                active = 0;
+                EventBus.getDefault().post(new LoginBusEvent("NO", active, t.getMessage()));
+            };
 
         });
     }
@@ -172,7 +176,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void executeInvoiceApi(String userId) {
         InvoiceDetailRequest invoiceDetailRequest = new InvoiceDetailRequest();
         invoiceDetailRequest.setUserid(userId);
-        Call<InvoiceDataModel> invoiceDataModelCall = sencoApi.getInvoiceId(invoiceDetailRequest);
+        Call<InvoiceDataModel> invoiceDataModelCall = gateApi.getInvoiceId(invoiceDetailRequest);
 
 
         invoiceDataModelCall.enqueue(new Callback<InvoiceDataModel>() {
@@ -188,10 +192,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                     isSuccess = false;
                 }
                 if (isSuccess) {
-                        databaseConnection.deleteTable("InvoiceDetail");
-                        databaseConnection.insertInvoiceDetails(response.body());
-                        EventBus.getDefault().post(new InvoiceBusEvent("YES"));
-                        //busevent fire YES
+                    databaseConnection.deleteTable("InvoiceDetail");
+                    databaseConnection.insertInvoiceDetails(response.body());
+                    EventBus.getDefault().post(new InvoiceBusEvent("YES"));
+                    //busevent fire YES
                 } else {
                     EventBus.getDefault().post(new InvoiceBusEvent("NO"));
                     //busevent fire NO
@@ -215,7 +219,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         customerInvoiceRequest.setInvoiceid(invoiceId);
         customerInvoiceRequest.setCustaccount(custAcct);
 
-        Call<CustomerInvoiceDataModel> customerInvoiceDataModelCall = sencoApi.getInvoiceDetails(customerInvoiceRequest);
+        Call<CustomerInvoiceDataModel> customerInvoiceDataModelCall = gateApi.getInvoiceDetails(customerInvoiceRequest);
 
         customerInvoiceDataModelCall.enqueue(new Callback<CustomerInvoiceDataModel>() {
             boolean isSuccess;
@@ -269,7 +273,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 signatureDetailRequest.setInvoiceId(invoiceId);
                 signatureDetailRequest.setCustAccount(custAcct);
                 signatureDetailRequest.setSignature(signature);
-                Call<SignatureDataModel> signatureDataModelCall = sencoApi.postSignatureDetails(signatureDetailRequest);
+                Call<SignatureDataModel> signatureDataModelCall = gateApi.postSignatureDetails(signatureDetailRequest);
 
                 signatureDataModelCall.enqueue(new Callback<SignatureDataModel>() {
                     boolean isSuccess;
@@ -308,7 +312,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         VersionDetailRequest versionDetailRequest = new VersionDetailRequest();
         versionDetailRequest.setType("Android");
 
-        Call<VersionDataModel> versionDataModelCall = sencoApi.getVersionDetails(versionDetailRequest);
+        Call<VersionDataModel> versionDataModelCall = gateApi.getVersionDetails(versionDetailRequest);
 
         versionDataModelCall.enqueue(new Callback<VersionDataModel>() {
 
@@ -319,7 +323,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 if (response.code() == 200) {
                     isSuccess = 1;
-                    
+
                 } else if (response.code() == 404) {
                     isSuccess = 2;
                 } else {

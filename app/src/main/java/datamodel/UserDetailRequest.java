@@ -1,6 +1,9 @@
 package datamodel;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,43 +18,42 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 public class UserDetailRequest{
 
-    @JsonProperty("USERID")
-    private String userid;
-    @JsonProperty("PASSWORD")
-    private String password;
-    @JsonProperty("STORE")
-    private String store;
+
+    @JsonProperty("employee_id")
+    private String employeeId;
+    @JsonProperty("employee_pin")
+    private String employeePin;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    @JsonProperty("USERID")
-    public String getUserid() {
-        return userid;
+    @JsonProperty("employee_id")
+    public String getEmployeeId() {
+        return employeeId;
     }
 
-    @JsonProperty("USERID")
-    public void setUserid(String userid) {
-        this.userid = userid;
+    @JsonProperty("employee_id")
+    public void setEmployeeId(String employeeId) {
+        this.employeeId = employeeId;
     }
 
-    @JsonProperty("PASSWORD")
-    public String getPassword() {
-        return password;
+    @JsonProperty("employee_pin")
+    public String getEmployeePin() {
+        return employeePin;
     }
 
-    @JsonProperty("PASSWORD")
-    public void setPassword(String password) {
-        this.password = password;
+    @JsonProperty("employee_pin")
+    public void setEmployeePin(String employeePin) {
+        this.employeePin = employeePin;
     }
 
-    @JsonProperty("STORE")
-    public String getStore() {
-        return store;
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
     }
 
-    @JsonProperty("STORE")
-    public void setStore(String store) {
-        this.store = store;
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
     }
 
 }
