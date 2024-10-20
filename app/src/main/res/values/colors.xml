@@ -5,8 +5,9 @@
     <color name="AppTheme">#ff1933</color>
     <color name="transparent_black">#79000000</color>
     <color name="grey">#666666</color>
+    <color name="lightgrey">#7B878787</color>
     <color name="goldcolor">#FFD700</color>
-    <color name="greyButton">#888081</color>
+    <color name="greyButton">#92888081</color>
     <color name="red">#ff3b2f</color>
 
 

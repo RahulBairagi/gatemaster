@@ -1,52 +1,110 @@
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:id="@+id/poprl"
+
+        android:background="@color/lightgrey">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            android:id="@+id/visitorphcard"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="@dimen/_7sdp"
+            android:layout_margin="@dimen/_30sdp"
+            android:background="@drawable/card_background_selector"
+            app:cardCornerRadius="@dimen/_5sdp"
+            android:padding="@dimen/_20sdp"
+            app:strokeColor="@color/grey"
+            android:layout_centerInParent="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/visitormobinp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter Visitor Mobile Number"
+                    android:padding="@dimen/_10sdp"
+                    android:maxLength="10"
+                    android:inputType="phone"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:drawableEnd="@drawable/ic_clear" />
+
+                <include
+                    android:id="@+id/visitorphnbtn"
+                    layout="@layout/button_gatex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+            </LinearLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainrl"
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/menuIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menu"
-            android:contentDescription="Menu"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:contentDescription="Menu"
+            android:src="@drawable/ic_menu"  />
 
         <TextView
             android:id="@+id/homePageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Visitor Checkin"
+            android:layout_alignBottom="@+id/menuIcon"
+            android:layout_centerHorizontal="true"
+            android:text="Check In"
             android:textColor="@android:color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/profileIcon"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@+id/menuIcon"
-             />
-
+            android:textStyle="bold" />
 
         <!-- Profile Icon -->
         <ImageView
             android:id="@+id/profileIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_profile"
-            android:contentDescription="Profile"
-            android:layout_marginEnd="16dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Profile"
+            android:src="@drawable/ic_profile" />
 
-        <include
+      <!--  <include
             android:id="@+id/scanDriverLicenseButton"
             layout="@layout/button_gatex"
             android:layout_width="@dimen/_130sdp"
@@ -57,26 +115,18 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <include
-            android:id="@+id/scanVehicleDiscButton"
-            layout="@layout/button_gatex"
-            android:layout_width="@dimen/_130sdp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/menuIcon"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
+-->
+
+       <!-- <TextView
             android:id="@+id/driverSectionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Driver Details"
             android:textStyle="bold"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@+id/scanDriverLicenseButton"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_below="@id/homePageTitle"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
             android:layout_marginStart="16dp" />
 
@@ -123,6 +173,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="8dp" />
+-->
 
         <TextView
             android:id="@+id/visitingDetailsTitle"
@@ -132,31 +183,48 @@
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/drivingLicenseNumberEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_below="@id/homePageTitle"
+            android:layout_centerHorizontal="true"/>
 
-        <EditText
-            android:id="@+id/visitorNameEditText"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
-            android:drawableEnd="@drawable/ic_clear"
-            app:layout_constraintTop_toBottomOf="@+id/visitingDetailsTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp" />
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_centerHorizontal="true"
+            android:padding="@dimen/_3sdp"
+            android:id="@+id/visitorll"
+            android:layout_below="@id/visitingDetailsTitle">
 
-        <EditText
-            android:id="@+id/addressEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Address"
-            android:drawableEnd="@drawable/ic_clear"
-            app:layout_constraintTop_toBottomOf="@+id/visitorNameEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp" />
+
+
+            <EditText
+                android:id="@+id/visitorphtxtinp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number"
+                android:inputType="phone"
+                android:maxLength="10"
+                android:drawableEnd="@drawable/ic_clear" />
+
+
+            <EditText
+                android:id="@+id/visitorNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:drawableEnd="@drawable/ic_clear" />
+
+            <EditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Address"
+                android:drawableEnd="@drawable/ic_clear" />
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/vehicleDetailsTitle"
@@ -165,53 +233,143 @@
             android:text="Vehicle Details"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/addressEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_below="@+id/visitorll"/>
 
         <EditText
             android:id="@+id/carRegistrationEditText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Car Registration"
             android:drawableEnd="@drawable/ic_clear"
-            app:layout_constraintTop_toBottomOf="@+id/vehicleDetailsTitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp" />
-
-        <EditText
-            android:id="@+id/carModelEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Car Model"
-            android:drawableEnd="@drawable/ic_clear"
-            app:layout_constraintTop_toBottomOf="@+id/carRegistrationEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp" />
-
-        <EditText
-            android:id="@+id/carCompanyEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="Company"
-            android:drawableEnd="@drawable/ic_clear"
-            app:layout_constraintTop_toBottomOf="@+id/carModelEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_margin="8dp" />
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:layout_below="@+id/vehicleDetailsTitle" />
 
         <include
-            android:id="@+id/checkOutButton"
+            android:id="@+id/scanVehicleDiscButton"
             layout="@layout/button_gatex"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_marginLeft="@dimen/_30sdp"
+            android:layout_below="@id/carRegistrationEditText"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/visitortypelbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/carCompanyEditText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:text="Visit Type"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/scanVehicleDiscButton"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/visitortypelbl"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:id="@+id/visittypell"
+            android:layout_centerHorizontal="true">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_120sdp"
+                android:layout_weight="1"
+                android:id="@+id/visitorcard"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/_7sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/card_background_selector"
+                app:cardCornerRadius="@dimen/_5sdp"
+                android:padding="@dimen/_20sdp"
+                app:strokeColor="@color/grey">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+
+
+                <ImageButton
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:background="@drawable/guest"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Visitor"
+                    android:textSize="@dimen/_12sdp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="@dimen/_120sdp"
+                android:id="@+id/deliverycard"
+                android:layout_weight="1"
+                android:background="@drawable/card_background_selector"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/_7sdp"
+                android:layout_margin="@dimen/_10sdp"
+                app:cardCornerRadius="@dimen/_5sdp"
+                android:padding="@dimen/_5sdp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center">
+
+
+                    <ImageButton
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_50sdp"
+                        android:background="@drawable/delivery"
+                        android:layout_gravity="center"
+                        android:padding="@dimen/_5sdp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivery"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold"
+                        android:layout_gravity="center" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/checkinbtn"
+            layout="@layout/button_gatex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginTop="16dp"
+            android:layout_below="@id/visittypell" />
+
+    </RelativeLayout>
+</RelativeLayout>
