@@ -8,18 +8,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.material.card.MaterialCardView;
 import com.mobile.gatemaster.R;
 
+import org.greenrobot.eventbus.Subscribe;
+
+import busevent.BusEventDefault;
+import busevent.VisiteeDetails;
+import utils.Util;
+
 public class VisitorCheckInActivity extends BaseActivity {
-    Button scanVehDisc, checkin, visitorbtn;
+    Button scanVehDisc, checkinbtn, visitorphbtn;
     MaterialCardView visitorcard, deliverycard;
     Boolean visitortoggle = false, deliverytoggle = false;
     RelativeLayout mainrl, poprl;
-    EditText visitormobinp, visitorphtxtinp, visitorNameEditText, addressEditText, carRegistrationEditText;
+    EditText visitormobinp, visitorphtxtinp, visitorNameEditText, addressEditText, carRegistrationEditText, purposeinptxt;
 
-    private String name, address , carRegistration = "";
+    private String name, address, carRegistration = "";
 
     @Override
     protected void create(Bundle bundle) {
@@ -27,25 +34,41 @@ public class VisitorCheckInActivity extends BaseActivity {
         init();
     }
 
-    @SuppressLint("Range")
-    private void checkMobileNumber(String mobileNumber) {
-        Cursor cursor = databaseConnection.getVisitorCursorByMobile(mobileNumber);
+    @Subscribe
+    public void onEvent(VisiteeDetails event) {
+        hideProgress();
+        if(event.getSuccess()){
+            mainrl.setVisibility(View.VISIBLE);
+            poprl.setVisibility(View.INVISIBLE);
+            name = event.getName();
+            address = event.getAddress();
+            visitorphtxtinp.setText(visitormobinp.getText().toString());
+            visitorNameEditText.setText(name);
+            addressEditText.setText(address);
+        }else{
+            mainrl.setVisibility(View.VISIBLE);
+            poprl.setVisibility(View.INVISIBLE);
+            visitorphtxtinp.setText(visitormobinp.getText().toString());
+            visitorNameEditText.setText("");
+            addressEditText.setText("");
+            carRegistrationEditText.setText("");
+        }
+    }
 
-        if (cursor != null && cursor.moveToFirst()) {
-            name = cursor.getString(cursor.getColumnIndex("visitor_name"));
-            address = cursor.getString(cursor.getColumnIndex("visitor_address"));
-            carRegistration = cursor.getString(cursor.getColumnIndex("vehicle_registration_number"));
-            cursor.close();
-        } else {
-            Log.d("Visitor Info", "No entry found for this mobile number.");
+    @Subscribe
+    public void onEvent(BusEventDefault event) {
+        hideProgress();
+        Util.showToast(this, event.getMessage());
+        if (event.getSuccess()) {
+            Util.pushwithFinish(this, HomeActivity.class);
         }
     }
 
     private void init() {
 
         scanVehDisc = (Button) findViewById(R.id.scanVehicleDiscButton).findViewById(R.id.btn);
-        checkin = (Button) findViewById(R.id.checkinbtn).findViewById(R.id.btn);
-        visitorbtn = (Button) findViewById(R.id.visitorphnbtn).findViewById(R.id.btn);
+        checkinbtn = (Button) findViewById(R.id.checkinbtn).findViewById(R.id.btn);
+        visitorphbtn = (Button) findViewById(R.id.visitorphnbtn).findViewById(R.id.btn);
         visitorcard = findViewById(R.id.visitorcard);
         deliverycard = findViewById(R.id.deliverycard);
         mainrl = findViewById(R.id.mainrl);
@@ -55,10 +78,11 @@ public class VisitorCheckInActivity extends BaseActivity {
         addressEditText = findViewById(R.id.addressEditText);
         visitorphtxtinp = findViewById(R.id.visitorphtxtinp);
         carRegistrationEditText = findViewById(R.id.carRegistrationEditText);
+        purposeinptxt = findViewById(R.id.purposeinptxt);
 
         scanVehDisc.setText("Scan Vehicle Disc");
-        checkin.setText("Check In");
-        visitorbtn.setText("Submit");
+        checkinbtn.setText("Check In");
+        visitorphbtn.setText("Submit");
 
         mainrl.setVisibility(View.INVISIBLE);
         poprl.setVisibility(View.VISIBLE);
@@ -78,23 +102,42 @@ public class VisitorCheckInActivity extends BaseActivity {
             }
         });
 
-        visitorbtn.setOnClickListener(new View.OnClickListener() {
+        visitorphbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (visitormobinp.getText().length() == 10) {
-                    checkMobileNumber(visitormobinp.getText().toString());
-                    mainrl.setVisibility(View.VISIBLE);
-                    poprl.setVisibility(View.INVISIBLE);
-                    visitorphtxtinp.setText(visitormobinp.getText().toString());
-                    visitorNameEditText.setText(name);
-                    addressEditText.setText(address);
-                    carRegistrationEditText.setText(carRegistration);
+                    if(Util.isNetworkAvailable(VisitorCheckInActivity.this)) {
+                        showProgress();
+                        getvisitingdetails(visitormobinp.getText().toString());
+                    }else{
+                        Util.showOKAlert(VisitorCheckInActivity.this,"Please check your internet connection and try again later");
+                    }
                 } else {
                     visitormobinp.setError("Invalid Mobile Number");
                 }
             }
         });
 
+        checkinbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkinvalidate()) {
+                    if(Util.isNetworkAvailable(VisitorCheckInActivity.this)){
+                        showProgress();
+                        // Call post check-in here
+                        String visitttype = "";
+                        if(visitortoggle){
+                            visitttype = "1";
+                        }else if(deliverytoggle){
+                            visitttype = "2";
+                        }
+                        postCheckIn("1", visitorNameEditText.getText().toString(), addressEditText.getText().toString(), purposeinptxt.getText().toString(), carRegistrationEditText.getText().toString(), visitttype,visitorphtxtinp.getText().toString());
+                    }else{
+                        Util.showOKAlert(VisitorCheckInActivity.this,"Please check your internet connection and try again later");
+                    }
+                }
+            }
+        });
 
         deliverycard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,4 +154,31 @@ public class VisitorCheckInActivity extends BaseActivity {
             }
         });
     }
+
+    public boolean checkinvalidate() {
+        boolean validate = true;
+
+        if (visitorphtxtinp.getText().length() != 10) {
+            visitorphtxtinp.setError("Invalid Mobile Number");
+            validate = false;
+        } else if (visitorNameEditText.getText().length() == 0) {
+            visitorNameEditText.setError("Invalid Name");
+            validate = false;
+        } else if (addressEditText.getText().length() == 0) {
+            addressEditText.setError("Invalid Address");
+            validate = false;
+        } else if (carRegistrationEditText.getText().length() == 0) {
+            carRegistrationEditText.setError("Invalid Car Registration");
+            validate = false;
+        }else if(purposeinptxt.getText().length() == 0){
+            purposeinptxt.setError("Invalid Purpose Details");
+            validate = false;
+        }
+        else if (deliverytoggle == false && visitortoggle == false) {
+            Util.showToast(VisitorCheckInActivity.this, "Select Visit Type");
+            validate = false;
+        }
+        return validate;
+    }
+
 }

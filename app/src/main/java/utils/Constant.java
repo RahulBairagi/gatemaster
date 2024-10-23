@@ -3,6 +3,9 @@ package utils;
 public class Constant {
     public static final String SHARED_PREF_NAME = "JSHARED_PREFS";
     public static  String BASE_URL ="http://api.gatecontrolx.com:9000/api/v1/";
+    public static  String VISITOR_DETAILS ="guard/getvisitordetails/";
+
+
     //"http://125.63.88.147:7401/api/  local acxiom
 //    http://125.63.88.147:2047/api/ 16-02-24
 

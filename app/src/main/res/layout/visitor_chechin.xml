@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:id="@+id/poprl"
 
         android:background="@color/lightgrey">
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/mainrl"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/menuIcon"
@@ -222,6 +222,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Address"
+                android:drawableEnd="@drawable/ic_clear" />
+
+            <EditText
+                android:id="@+id/purposeinptxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Purpose"
                 android:drawableEnd="@drawable/ic_clear" />
 
         </LinearLayout>

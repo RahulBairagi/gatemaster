@@ -20,7 +20,7 @@ import javax.annotation.processing.Generated;
         "user"
 })
 @Generated("jsonschema2pojo")
-public class ResponseData {
+public class ResponseLoginData {
 
     @JsonProperty("token_type")
     private String tokenType;

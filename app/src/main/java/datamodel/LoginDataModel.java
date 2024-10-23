@@ -31,7 +31,7 @@ public class LoginDataModel {
     @JsonProperty("message")
     private String message;
     @JsonProperty("responseData")
-    private ResponseData responseData;
+    private ResponseLoginData responseLoginData;
     @JsonProperty("error")
     private List<Object> error;
     @JsonIgnore
@@ -68,13 +68,13 @@ public class LoginDataModel {
     }
 
     @JsonProperty("responseData")
-    public ResponseData getResponseData() {
-        return responseData;
+    public ResponseLoginData getResponseData() {
+        return responseLoginData;
     }
 
     @JsonProperty("responseData")
-    public void setResponseData(ResponseData responseData) {
-        this.responseData = responseData;
+    public void setResponseData(ResponseLoginData responseLoginData) {
+        this.responseLoginData = responseLoginData;
     }
 
     @JsonProperty("error")

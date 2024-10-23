@@ -74,7 +74,7 @@
                     android:drawablePadding="@dimen/_8sdp"
                     android:padding="@dimen/_11sdp"
                     android:hint="Password"
-                    android:inputType="textPassword"
+                    android:inputType="numberPassword"
                     android:singleLine="true"
                     android:textColor="#000"
                     android:textColorHint="#000"

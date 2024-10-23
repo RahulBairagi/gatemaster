@@ -2,9 +2,7 @@ package com.example.gatemaster.ui;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,23 +21,16 @@ import javax.inject.Inject;
 
 import app.GateMasterApplication;
 import busevent.BusEventDefault;
-import busevent.InvoiceBusEvent;
-import busevent.InvoiceDetailBusEvent;
 import busevent.LoginBusEvent;
-import busevent.SignatureBusEvent;
-import busevent.VersionBusEvent;
-import datamodel.CustomerInvoiceDataModel;
-import datamodel.CustomerInvoiceRequest;
-import datamodel.InvoiceDataModel;
-import datamodel.InvoiceDetailRequest;
+import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
-import datamodel.SignatureDataModel;
-import datamodel.SignatureDetailRequest;
+import datamodel.PostCheckIn;
+import datamodel.ResponseCheckIn;
+import datamodel.ResponseVisiteeDetails;
 import datamodel.UserDetailRequest;
-import datamodel.VersionDataModel;
-import datamodel.VersionDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
+import model.ResponseData;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -156,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     sharedPref.save("userph", response.body().getResponseData().getUser().getMobile());
                     sharedPref.save("username", response.body().getResponseData().getUser().getName());
                     databaseConnection.insertUserDetails(response.body().getResponseData().getUser().getEmployeeId(), response.body().getResponseData().getUser().getName(), response.body().getResponseData().getUser().getEmail(), response.body().getResponseData().getUser().getMobile());
-                    Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
+//                    Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
                     sharedPref.save(Constant.PREF_AUTH_TOKEN, response.body().getResponseData().getAccessToken().toString());
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
@@ -224,7 +215,68 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void getActiveentries() {
+    public void postCheckIn(String gateid, String name, String address, String purpose, String vehiclenum, String visittype, String mob) {
+        PostCheckIn postCheckIn = new PostCheckIn();
+        postCheckIn.setGateId(gateid);
+        postCheckIn.setPurpose(purpose);
+        postCheckIn.setVisitorName(name);
+        postCheckIn.setVisitorAddress(address);
+        postCheckIn.setVehicleRegistrationNumber(vehiclenum);
+        postCheckIn.setVisitorType(visittype);
+        postCheckIn.setVisitorMobile(mob);
+
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<ResponseCheckIn> call = gateApi.postcheckin(token, postCheckIn);
+
+        call.enqueue(new Callback<ResponseCheckIn>() {
+            @Override
+            public void onResponse(Call<ResponseCheckIn> call, Response<ResponseCheckIn> response) {
+                if (response.isSuccessful()){
+                    if(response.body().getTitle().equalsIgnoreCase("Created")){
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(),true));
+                    }else{
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(),false));
+                    }
+                }else{
+                    EventBus.getDefault().post(new BusEventDefault("Error while Fetching Data",false));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCheckIn> call, Throwable t) {
+                EventBus.getDefault().post(new BusEventDefault("Error in connecting with Server.",false));
+            }
+        });
+    }
+
+    public void getvisitingdetails(String phnnum){
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(Constant.VISITOR_DETAILS+phnnum,token);
+
+        call.enqueue(new Callback<ResponseVisiteeDetails>() {
+
+            @Override
+            public void onResponse(Call<ResponseVisiteeDetails> call, Response<ResponseVisiteeDetails> response) {
+                if(response.isSuccessful()){
+                    if(response.body().getTitle() == "OK"){
+                        EventBus.getDefault().post(new VisiteeDetails(response.body().getResponseData().getName(),response.body().getResponseData().getAddress(),true));
+                    }else{
+                        EventBus.getDefault().post(new VisiteeDetails("","",false));
+                    }
+                }else{
+                    EventBus.getDefault().post(new VisiteeDetails("","",false));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseVisiteeDetails> call, Throwable t) {
+                EventBus.getDefault().post(new VisiteeDetails("","",false));
+            }
+        });
+
+    }
+
+    public void getActiveEntries() {
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         Call<ActiveEntriesResponse> call = gateApi.getActiveEntries(token);
 

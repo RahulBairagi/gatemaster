@@ -137,7 +137,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                         Log.d(TAG, "insertInvoiceDetails: insert =============>" + k);
                     }
                 }
-                EventBus.getDefault().post(new BusEventDefault());
+//                EventBus.getDefault().post(new BusEventDefault());
             }
         }catch (Exception e){
             Log.d(TAG, "InsertInvoiceDetail: ex =============>" + e.getMessage());
@@ -257,7 +257,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                     long result = sq.insert("GateEntries", null, contentValues);
                     Log.d(TAG, "insertGateEntries: insert =============>" + result);
                 }
-                EventBus.getDefault().post(new BusEventDefault()); // Notify listeners
+//                EventBus.getDefault().post(new BusEventDefault()); // Notify listeners
             }
         } catch (Exception e) {
             Log.d(TAG, "insertGateEntries: ex =============>" + e.getMessage());
