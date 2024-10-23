@@ -24,6 +24,7 @@ import com.mobile.gatemaster.R;
 import java.util.ArrayList;
 
 import adapter.AlertAdapter;
+import db.DatabaseConnection;
 import model.AlertItem;
 import utils.ProgressWheel;
 import utils.Util;
@@ -54,6 +55,8 @@ public class FirstFragment extends Fragment {
     BottomNavigationView bottomNavigationView;
     TextView guardinfolbl;
     SharedPreferences sharedPref;
+
+    private DatabaseConnection databaseConnection;
 
     public FirstFragment() {
         // Required empty public constructor
@@ -87,6 +90,7 @@ public class FirstFragment extends Fragment {
     }
 
     private void init(View view) {
+        databaseConnection = new DatabaseConnection(getContext());
         checkInVisitorLayout = view.findViewById(R.id.checkInVisitor);
         recyclerView = view.findViewById(R.id.recyclerView);
         guardinfolbl = view.findViewById(R.id.guardname_lbl);

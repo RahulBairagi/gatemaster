@@ -1,5 +1,6 @@
 package db;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -11,9 +12,15 @@ import com.example.gatemaster.ui.HomeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import busevent.BusEventDefault;
 import datamodel.CustomerInvoiceDataModel;
 import datamodel.InvoiceDataModel;
+import model.ActiveEntriesResponse;
+import model.GateEntry;
+import model.ResponseData;
 
 public class DatabaseConnection extends SQLiteOpenHelper {
 
@@ -51,6 +58,9 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_SIGNATUREDETAIL=" create table if not exists SignatureDetail(invoiceID text,custAcct text, signature blob, id text, post text,status text);";
 
+    private static final String CREATE_TABLE_GATE_ENTRIES = "CREATE TABLE IF NOT EXISTS GateEntries (vehicle_registration_number TEXT, visitor_name TEXT, visitor_mobile TEXT, visitor_address TEXT, purpose TEXT, entry_time TEXT, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT);";
+
+
 
 
     public DatabaseConnection(Context context) {
@@ -64,6 +74,9 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_INVOICEDETAIL);
         db.execSQL(CREATE_TABLE_CUSTOMERINVOICEDETAIL);
         db.execSQL(CREATE_TABLE_SIGNATUREDETAIL);
+        db.execSQL(CREATE_TABLE_GATE_ENTRIES);
+
+
           }
 
     @Override
@@ -72,6 +85,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_INVOICEDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_CUSTOMERINVOICEDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_SIGNATUREDETAIL);
+        db.execSQL("drop table if exists"+" "+CREATE_TABLE_GATE_ENTRIES);
 
 
         onCreate(db);
@@ -219,5 +233,87 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     public void save_checkin(){
 
     }
+
+
+    public void insertGateEntries(ActiveEntriesResponse data) {
+        try {
+            sq = this.getWritableDatabase();
+            if (data != null && data.getResponseData() != null) {
+                ContentValues contentValues = new ContentValues();
+                for (ResponseData entry : data.getResponseData()) {
+                    contentValues.clear();
+
+                    contentValues.put("vehicle_registration_number", entry.getVehicleRegistrationNumber());
+                    contentValues.put("visitor_name", entry.getVisitorName());
+                    contentValues.put("visitor_mobile", entry.getVisitorMobile());
+                    contentValues.put("visitor_address", entry.getVisitorAddress());
+                    contentValues.put("purpose", entry.getPurpose());
+                    contentValues.put("entry_time", entry.getEntryTime());
+                    contentValues.put("created_type", entry.getCreatedType());
+                    contentValues.put("modified_type", entry.getModifiedType());
+                    contentValues.put("created_at", entry.getCreatedAt());
+                    contentValues.put("updated_at", entry.getUpdatedAt());
+
+                    long result = sq.insert("GateEntries", null, contentValues);
+                    Log.d(TAG, "insertGateEntries: insert =============>" + result);
+                }
+                EventBus.getDefault().post(new BusEventDefault()); // Notify listeners
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "insertGateEntries: ex =============>" + e.getMessage());
+        } finally {
+            if (sq != null) {
+                sq.close();
+            }
+        }
+    }
+
+    public List<GateEntry> getGateEntries() {
+        sq = this.getReadableDatabase();
+
+        List<GateEntry> gateEntries = new ArrayList<>();
+
+        // Query to fetch all records
+        Cursor cursor = sq.rawQuery("SELECT vehicle_registration_number, visitor_name, visitor_mobile, visitor_address, purpose, entry_time, created_type, modified_type, created_at, updated_at FROM GateEntries", null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                @SuppressLint("Range") String vehicleRegistrationNumber = cursor.getString(cursor.getColumnIndex("vehicle_registration_number"));
+                @SuppressLint("Range") String visitorName = cursor.getString(cursor.getColumnIndex("visitor_name"));
+                @SuppressLint("Range") String visitorMobile = cursor.getString(cursor.getColumnIndex("visitor_mobile"));
+                @SuppressLint("Range") String visitorAddress = cursor.getString(cursor.getColumnIndex("visitor_address"));
+                @SuppressLint("Range") String purpose = cursor.getString(cursor.getColumnIndex("purpose"));
+                @SuppressLint("Range") String entryTime = cursor.getString(cursor.getColumnIndex("entry_time"));
+                @SuppressLint("Range") String createdType = cursor.getString(cursor.getColumnIndex("created_type"));
+                @SuppressLint("Range") String modifiedType = cursor.getString(cursor.getColumnIndex("modified_type"));
+                @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex("created_at"));
+                @SuppressLint("Range") String updatedAt = cursor.getString(cursor.getColumnIndex("updated_at"));
+
+                // Add new GateEntry object to the list
+                gateEntries.add(new GateEntry(
+                        vehicleRegistrationNumber,
+                        visitorName,
+                        visitorMobile,
+                        visitorAddress,
+                        purpose,
+                        entryTime,
+                        createdType,
+                        modifiedType,
+                        createdAt,
+                        updatedAt
+                ));
+            } while (cursor.moveToNext());
+
+            cursor.close();
+        }
+
+        return gateEntries;
+    }
+
+    public Cursor getVisitorCursorByMobile(String mobileNumber) {
+        sq = this.getReadableDatabase();
+        return sq.rawQuery("SELECT visitor_name, visitor_address,vehicle_registration_number FROM GateEntries WHERE visitor_mobile = ?", new String[]{mobileNumber});
+    }
+
 
 }

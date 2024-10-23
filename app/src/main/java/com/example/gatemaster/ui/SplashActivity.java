@@ -106,7 +106,6 @@ public class SplashActivity extends BaseActivity  implements View.OnClickListene
                     Constant.BASE_URL =MAINURL ;
                     gateApi = ServiceGenerator.createService(GateApi.class, "", "");
                     showProgress();
-                        executeVersionDetailApi();
                 }else {
                     ip.setText("");
                     Util.showOKAlert(SplashActivity.this, "Invalid IP address");
@@ -171,7 +170,6 @@ public class SplashActivity extends BaseActivity  implements View.OnClickListene
             Constant.BASE_URL = baseUrl;
             if (Util.isNetworkAvailable(SplashActivity.this)){
                 showProgress();
-                executeVersionDetailApi();
             }
         }else {
             ipAddressMainView.setVisibility(View.VISIBLE);

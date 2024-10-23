@@ -2,17 +2,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="app.SecondFragment">
+    tools:context="app.FirstFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/secondFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Visitors"
-        android:textColor="@color/buttontheme"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+    <!--    <TextView
+            android:id="@+id/firstFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:textColor="@color/buttontheme"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>-->
+
+    <RelativeLayout
+        android:id="@+id/toplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Menu Icon -->
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="Menu"
+            android:src="@drawable/ic_menu" />
+
+        <!-- Profile Icon -->
+        <ImageView
+            android:id="@+id/profileIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:contentDescription="Profile"
+            android:src="@drawable/ic_profile" />
+
+        <!-- Home Page Title -->
+        <TextView
+            android:id="@+id/homePageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/menuIcon"
+            android:layout_centerHorizontal="true"
+            android:text="Visitor Page"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Live Alerts Title -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewVisitors"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/homePageTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            />
+
+
+    </RelativeLayout>
+
+
 
 </FrameLayout>

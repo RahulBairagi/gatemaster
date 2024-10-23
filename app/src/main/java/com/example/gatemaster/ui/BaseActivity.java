@@ -39,6 +39,7 @@ import datamodel.UserDetailRequest;
 import datamodel.VersionDataModel;
 import datamodel.VersionDetailRequest;
 import db.DatabaseConnection;
+import model.ActiveEntriesResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -156,6 +157,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     sharedPref.save("username", response.body().getResponseData().getUser().getName());
                     databaseConnection.insertUserDetails(response.body().getResponseData().getUser().getEmployeeId(), response.body().getResponseData().getUser().getName(), response.body().getResponseData().getUser().getEmail(), response.body().getResponseData().getUser().getMobile());
                     Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
+                    sharedPref.save(Constant.PREF_AUTH_TOKEN, response.body().getResponseData().getAccessToken().toString());
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
                     active = 0;
@@ -173,179 +175,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
-    public void executeInvoiceApi(String userId) {
-        InvoiceDetailRequest invoiceDetailRequest = new InvoiceDetailRequest();
-        invoiceDetailRequest.setUserid(userId);
-        Call<InvoiceDataModel> invoiceDataModelCall = gateApi.getInvoiceId(invoiceDetailRequest);
 
 
-        invoiceDataModelCall.enqueue(new Callback<InvoiceDataModel>() {
-            boolean isSuccess;
-
-            @Override
-            public void onResponse(Call<InvoiceDataModel> call, Response<InvoiceDataModel> response) {
-                if (response.code() == 200) {
-                    isSuccess = true;
-                    Log.d("BASE-URL", "InvoiceApi: ==============>url - "
-                            + call.request().url() + " ===============>" + bodyToString(call.request().body()));
-                } else {
-                    isSuccess = false;
-                }
-                if (isSuccess) {
-                    databaseConnection.deleteTable("InvoiceDetail");
-                    databaseConnection.insertInvoiceDetails(response.body());
-                    EventBus.getDefault().post(new InvoiceBusEvent("YES"));
-                    //busevent fire YES
-                } else {
-                    EventBus.getDefault().post(new InvoiceBusEvent("NO"));
-                    //busevent fire NO
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<InvoiceDataModel> call, Throwable t) {
-                isSuccess = false;
-                EventBus.getDefault().post(new InvoiceBusEvent("NO"));
-                //busevent fire NO
-
-            }
-        });
-
-    }
-
-    public void executeInvoiceDetailApi(String invoiceId, String custAcct) {
-        CustomerInvoiceRequest customerInvoiceRequest = new CustomerInvoiceRequest();
-        customerInvoiceRequest.setInvoiceid(invoiceId);
-        customerInvoiceRequest.setCustaccount(custAcct);
-
-        Call<CustomerInvoiceDataModel> customerInvoiceDataModelCall = gateApi.getInvoiceDetails(customerInvoiceRequest);
-
-        customerInvoiceDataModelCall.enqueue(new Callback<CustomerInvoiceDataModel>() {
-            boolean isSuccess;
-
-            @Override
-            public void onResponse(Call<CustomerInvoiceDataModel> call, Response<CustomerInvoiceDataModel> response) {
-                if (response.code() == 200) {
-                    isSuccess = true;
-                    Log.d("BASE-URL", "InvoiceDetailApi: ==============>url - "
-                            + call.request().url() + " ===============>" + bodyToString(call.request().body()));
-                } else {
-                    isSuccess = false;
-                }
-                if (isSuccess) {
-                    databaseConnection.deleteTable("CustomerInvoiceDetail");
-                    databaseConnection.insertCustomerInvoiceDetails(response.body());
-                    EventBus.getDefault().post(new InvoiceDetailBusEvent("YES"));
-                    //busevent fire YES
-
-                } else {
-                    EventBus.getDefault().post(new InvoiceDetailBusEvent("NO"));
-                    //busevent fire NO
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CustomerInvoiceDataModel> call, Throwable t) {
-                isSuccess = false;
-                EventBus.getDefault().post(new InvoiceDetailBusEvent("NO"));
-                //busevent fire NO
-
-            }
-        });
-
-    }
-
-    public void postSignatureDetailApi() {
-        Cursor cursor = databaseConnection.getCustomerSignatureDetail();
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                String id = cursor.getString(cursor.getColumnIndexOrThrow("id"));
-                String invoiceId = cursor.getString(cursor.getColumnIndexOrThrow("invoiceID"));
-                String custAcct = cursor.getString(cursor.getColumnIndexOrThrow("custAcct"));
-                String signature = "";
-                if (cursor.getBlob(2) != null) {
-                    signature = Base64.encodeToString(cursor.getBlob(2), Base64.DEFAULT);
-                }
-                SignatureDetailRequest signatureDetailRequest = new SignatureDetailRequest();
-                signatureDetailRequest.setInvoiceId(invoiceId);
-                signatureDetailRequest.setCustAccount(custAcct);
-                signatureDetailRequest.setSignature(signature);
-                Call<SignatureDataModel> signatureDataModelCall = gateApi.postSignatureDetails(signatureDetailRequest);
-
-                signatureDataModelCall.enqueue(new Callback<SignatureDataModel>() {
-                    boolean isSuccess;
-
-                    @Override
-                    public void onResponse(Call<SignatureDataModel> call, Response<SignatureDataModel> response) {
-
-                        Log.d("BASE-URL", "postSignDetail: ==============>url - "
-                                + call.request().url() + " ===============>" + bodyToString(call.request().body()));
-                        if (response.code() == 200) {
-                            isSuccess = true;
-
-
-                        } else {
-                            isSuccess = false;
-                        }
-                        if (isSuccess) {
-                            EventBus.getDefault().post(new SignatureBusEvent("YES"));
-                        } else {
-                            EventBus.getDefault().post(new SignatureBusEvent("NO"));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SignatureDataModel> call, Throwable t) {
-                        EventBus.getDefault().post(new SignatureBusEvent("NO"));
-                    }
-                });
-            }
-        }
-
-
-    }
-
-    public void executeVersionDetailApi() {
-        VersionDetailRequest versionDetailRequest = new VersionDetailRequest();
-        versionDetailRequest.setType("Android");
-
-        Call<VersionDataModel> versionDataModelCall = gateApi.getVersionDetails(versionDetailRequest);
-
-        versionDataModelCall.enqueue(new Callback<VersionDataModel>() {
-
-            int isSuccess;
-
-            @Override
-            public void onResponse(Call<VersionDataModel> call, Response<VersionDataModel> response) {
-
-                if (response.code() == 200) {
-                    isSuccess = 1;
-
-                } else if (response.code() == 404) {
-                    isSuccess = 2;
-                } else {
-                    isSuccess = 3;
-                }
-                if (isSuccess == 1) {
-                    EventBus.getDefault().post(new VersionBusEvent("YES", response.body().getVersion()));
-                } else if (isSuccess == 2) {
-                    EventBus.getDefault().post(new VersionBusEvent("INVALID", ""));
-                } else {
-                    EventBus.getDefault().post(new VersionBusEvent("NO", ""));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<VersionDataModel> call, Throwable t) {
-                EventBus.getDefault().post(new VersionBusEvent("NO", ""));
-            }
-        });
-
-
-    }
 
 
     @Override
@@ -391,6 +222,39 @@ public abstract class BaseActivity extends AppCompatActivity {
         } catch (final IOException e) {
             return "did not work";
         }
+    }
+
+    public void getActiveentries() {
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<ActiveEntriesResponse> call = gateApi.getActiveEntries(token);
+
+        call.enqueue(new Callback<ActiveEntriesResponse>() {
+            @Override
+            public void onResponse(Call<ActiveEntriesResponse> call, Response<ActiveEntriesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ActiveEntriesResponse data = response.body();
+
+                    // Check the statusCode from the response
+                    if ("200".equals(data.getStatusCode())) {
+                        databaseConnection.deleteTable("GateEntries");
+                        databaseConnection.insertGateEntries(data);
+                        Log.d("getActiveentries==========", data.toString());
+                    } else {
+                        // Handle unexpected status code (e.g., not 200)
+                        Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
+                    }
+                } else {
+                    // Handle error case when response is not successful
+                    Log.e("getActiveentries", "Response not successful or body is null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ActiveEntriesResponse> call, Throwable t) {
+                // Handle failure
+                Log.e("getActiveentries", "Request failed: " + t.getMessage());
+            }
+        });
     }
 
 }

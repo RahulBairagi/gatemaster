@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:id="@+id/poprl"
 
         android:background="@color/lightgrey">
@@ -50,7 +51,7 @@
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
+
                     />
 
             </LinearLayout>

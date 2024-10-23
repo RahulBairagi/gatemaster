@@ -30,6 +30,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
         bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.tabhome);
+        getActiveentries();
 
     }
 
