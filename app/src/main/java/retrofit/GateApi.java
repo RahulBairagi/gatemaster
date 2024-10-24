@@ -7,7 +7,9 @@ import datamodel.InvoiceDataModel;
 import datamodel.InvoiceDetailRequest;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
+import datamodel.PostCheckOut;
 import datamodel.ResponseCheckIn;
+import datamodel.ResponseCheckOut;
 import datamodel.ResponseVisiteeDetails;
 import datamodel.SignatureDataModel;
 import datamodel.SignatureDetailRequest;
@@ -36,8 +38,12 @@ public interface GateApi {
     @GET("guard/getactiveentries")
     Call<ActiveEntriesResponse> getActiveEntries(@Header("Authorization") String authToken);
 
-    @GET()
+    @GET("guard/getvisitordetails/{mobileNumber}")
     Call<ResponseVisiteeDetails> getVisiteeDetails(
-            @Url() String url, @Header("Authorization") String token);
+            @Header("Authorization") String authToken,
+            @Path("mobileNumber") String mobileNumber);
+
+    @POST("guard/checkout")
+    Call<ResponseCheckOut> postcheckout(@Header("Authorization") String authToken, @Body PostCheckOut jsonData);
 
 }

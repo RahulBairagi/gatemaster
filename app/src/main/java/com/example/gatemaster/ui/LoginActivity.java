@@ -44,8 +44,8 @@ public class LoginActivity extends BaseActivity {
         loginBtn.setText("Login");
         fgtbtn.setText("Forgot Password");
 
-//        userid.setText("EMP-001");
-//        password.setText("123456");
+        userid.setText("001");
+        password.setText("001");
 
         fgtbtn.setVisibility(View.GONE);
 

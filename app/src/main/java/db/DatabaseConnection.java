@@ -58,7 +58,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_SIGNATUREDETAIL=" create table if not exists SignatureDetail(invoiceID text,custAcct text, signature blob, id text, post text,status text);";
 
-    private static final String CREATE_TABLE_GATE_ENTRIES = "CREATE TABLE IF NOT EXISTS GateEntries (vehicle_registration_number TEXT, visitor_name TEXT, visitor_mobile TEXT, visitor_address TEXT, purpose TEXT, entry_time TEXT, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT);";
+    private static final String CREATE_TABLE_GATE_ENTRIES = "CREATE TABLE IF NOT EXISTS GateEntries (vehicle_registration_number TEXT, visitor_name TEXT, visitor_mobile TEXT, visitor_address TEXT, purpose TEXT, entry_time TEXT, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT, GateReqID TEXT);";
 
 
 
@@ -86,7 +86,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_CUSTOMERINVOICEDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_SIGNATUREDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_GATE_ENTRIES);
-
 
         onCreate(db);
     }
@@ -253,6 +252,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                     contentValues.put("modified_type", entry.getModifiedType());
                     contentValues.put("created_at", entry.getCreatedAt());
                     contentValues.put("updated_at", entry.getUpdatedAt());
+                    contentValues.put("GateReqID", entry.getGateEntriesRequestId());
 
                     long result = sq.insert("GateEntries", null, contentValues);
                     Log.d(TAG, "insertGateEntries: insert =============>" + result);
@@ -288,6 +288,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                 @SuppressLint("Range") String modifiedType = cursor.getString(cursor.getColumnIndex("modified_type"));
                 @SuppressLint("Range") String createdAt = cursor.getString(cursor.getColumnIndex("created_at"));
                 @SuppressLint("Range") String updatedAt = cursor.getString(cursor.getColumnIndex("updated_at"));
+                @SuppressLint("Range") String GateReqID = cursor.getString(cursor.getColumnIndex("GateReqID"));
 
                 // Add new GateEntry object to the list
                 gateEntries.add(new GateEntry(
@@ -300,7 +301,8 @@ public class DatabaseConnection extends SQLiteOpenHelper {
                         createdType,
                         modifiedType,
                         createdAt,
-                        updatedAt
+                        updatedAt,
+                        GateReqID
                 ));
             } while (cursor.moveToNext());
 

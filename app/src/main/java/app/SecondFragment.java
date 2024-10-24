@@ -43,7 +43,8 @@ public class SecondFragment extends Fragment {
         visitorsList = loadVisitorsFromDatabase();
 
         // Set up the RecyclerView Adapter
-        visitorsAdapter = new VisitorsAdapter(visitorsList);
+        visitorsAdapter = new VisitorsAdapter(visitorsList,
+                getActivity());
         recyclerView.setAdapter(visitorsAdapter);
 
 
@@ -69,7 +70,8 @@ public class SecondFragment extends Fragment {
                     entry.getCreatedType(),
                     entry.getModifiedType(),
                     entry.getCreatedAt(),
-                    entry.getUpdatedAt()
+                    entry.getUpdatedAt(),
+                    entry.getGateReqID()
             ));
         }
 

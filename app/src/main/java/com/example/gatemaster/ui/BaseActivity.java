@@ -14,6 +14,8 @@ import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -25,7 +27,9 @@ import busevent.LoginBusEvent;
 import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
+import datamodel.PostCheckOut;
 import datamodel.ResponseCheckIn;
+import datamodel.ResponseCheckOut;
 import datamodel.ResponseVisiteeDetails;
 import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
@@ -235,10 +239,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if(response.body().getTitle().equalsIgnoreCase("Created")){
                         EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(),true));
                     }else{
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(),false));
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(),false));
                     }
                 }else{
-                    EventBus.getDefault().post(new BusEventDefault("Error while Fetching Data",false));
+                    String message = "";
+                    try {
+                        message = getErrorFromResponse(response.errorBody().string());
+                    } catch (IOException e) {
+                        message = e.getMessage().toString();
+                        throw new RuntimeException(e);
+                    }
+                    EventBus.getDefault().post(new BusEventDefault(message,false));
                 }
             }
 
@@ -249,16 +260,60 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
+    public String getErrorFromResponse(String response){
+        String errorBody= response,message = "";
+        try {
+            JSONObject jsonObject = new JSONObject(errorBody);
+            message = jsonObject.optString("message", "No message found");
+        } catch (JSONException e) {
+            message = "Unable to get Error Message";
+            throw new RuntimeException(e);
+        }
+        return message;
+    }
+
+
+    public String postcheckoutapi(String gatereqid){
+        final String[] message = {""};
+        PostCheckOut postCheckOut = new PostCheckOut();
+        postCheckOut.setGateEntriesRequestId(gatereqid);
+
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<ResponseCheckOut> call = gateApi.postcheckout(token, postCheckOut);
+
+        call.enqueue(new Callback<ResponseCheckOut>() {
+            @Override
+            public void onResponse(Call<ResponseCheckOut> call, Response<ResponseCheckOut> response) {
+                if(response.isSuccessful()){
+                    message[0] = response.body().getMessage();
+                }else{
+                    message[0] = getErrorFromResponse(response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCheckOut> call, Throwable t) {
+
+            }
+        });
+
+
+
+
+        return message[0];
+    }
+
+
     public void getvisitingdetails(String phnnum){
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
-        Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(Constant.VISITOR_DETAILS+phnnum,token);
+        Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(token,phnnum);
 
         call.enqueue(new Callback<ResponseVisiteeDetails>() {
 
             @Override
             public void onResponse(Call<ResponseVisiteeDetails> call, Response<ResponseVisiteeDetails> response) {
-                if(response.isSuccessful()){
-                    if(response.body().getTitle() == "OK"){
+                if(response.code() == 200){
+                    if(response.body().getTitle().equalsIgnoreCase("ok")){
                         EventBus.getDefault().post(new VisiteeDetails(response.body().getResponseData().getName(),response.body().getResponseData().getAddress(),true));
                     }else{
                         EventBus.getDefault().post(new VisiteeDetails("","",false));

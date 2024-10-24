@@ -12,10 +12,19 @@ public class Visitor {
     private String modifiedType;
     private String createdAt;
     private String updatedAt;
+    private String GateReqID;
+
+    public String getGateReqID() {
+        return GateReqID;
+    }
+
+    public void setGateReqID(String gateReqID) {
+        GateReqID = gateReqID;
+    }
 
     public Visitor(String visitorName, String visitorMobile, String vehicleRegistrationNumber,
                    String visitorAddress, String purpose, String entryTime,
-                   String createdType, String modifiedType, String createdAt, String updatedAt) {
+                   String createdType, String modifiedType, String createdAt, String updatedAt, String GateReqID) {
         this.visitorName = visitorName;
         this.visitorMobile = visitorMobile;
         this.vehicleRegistrationNumber = vehicleRegistrationNumber;
@@ -26,6 +35,8 @@ public class Visitor {
         this.modifiedType = modifiedType;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.GateReqID = GateReqID;
+
     }
 
     // Getters and setters for each field

@@ -58,9 +58,12 @@ public class VisitorCheckInActivity extends BaseActivity {
     @Subscribe
     public void onEvent(BusEventDefault event) {
         hideProgress();
-        Util.showToast(this, event.getMessage());
+
         if (event.getSuccess()) {
             Util.pushwithFinish(this, HomeActivity.class);
+            Util.showToast(this, event.getMessage());
+        }else{
+            Util.showOKAlert(this,event.getMessage());
         }
     }
 
