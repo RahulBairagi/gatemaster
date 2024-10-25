@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gatemaster.ui.BaseActivity;
 import com.mobile.gatemaster.R;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
+import busevent.CheckOutBusEvent;
 import model.Visitor;
+import utils.Constant;
 import utils.Util;
 
 public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.VisitorViewHolder> {
@@ -47,19 +51,15 @@ public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.Visito
         holder.checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Util.isNetworkAvailable(context)) {
-                    BaseActivity baseActivity = (BaseActivity) context;
-                    baseActivity.showProgress();
-                    String Message = baseActivity.postcheckoutapi(visitorsList.get(position).getGateReqID().toString());
-                    if (Message.length() > 0) {
-                        baseActivity.hideProgress();
-                        Util.showOKAlert(context, Message);
-                    }
-                }else {
-                    Util.showOKAlert(context,"Please check your internet connection and try again later");
-                }
+                EventBus.getDefault().post(new CheckOutBusEvent(visitorsList.get(holder.getAdapterPosition()).getGateReqID(), Constant.CheckOut_Call,holder.getAdapterPosition(),""));
             }
         });
+    }
+
+    public void removeItem(int position) {
+        visitorsList.remove(position);
+        notifyItemRemoved(position); // Notify RecyclerView about item removal
+        notifyItemRangeChanged(position, visitorsList.size()); // Refresh remaining items
     }
 
     @Override

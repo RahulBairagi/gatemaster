@@ -56,22 +56,27 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- Live Alerts Title -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewVisitors"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/homePageTitle"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            />
+            android:layout_marginTop="@dimen/_5sdp">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewVisitors"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/homePageTitle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
-
 
 
 </FrameLayout>

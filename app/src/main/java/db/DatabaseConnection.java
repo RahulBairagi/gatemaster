@@ -29,7 +29,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static DatabaseConnection mInstance = null;
 
-    private static final String DATABASE_NAME = "gatemaster.db";
+    private static final String DATABASE_NAME = "GateMaster.db";
 
 
     private String TAG = "Database";
@@ -274,7 +274,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         List<GateEntry> gateEntries = new ArrayList<>();
 
         // Query to fetch all records
-        Cursor cursor = sq.rawQuery("SELECT vehicle_registration_number, visitor_name, visitor_mobile, visitor_address, purpose, entry_time, created_type, modified_type, created_at, updated_at FROM GateEntries", null);
+        Cursor cursor = sq.rawQuery("SELECT vehicle_registration_number, visitor_name, visitor_mobile, visitor_address, purpose, entry_time, created_type, modified_type, created_at, updated_at, GateReqID FROM GateEntries", null);
 
         if (cursor != null && cursor.moveToFirst()) {
             do {
@@ -315,6 +315,10 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     public Cursor getVisitorCursorByMobile(String mobileNumber) {
         sq = this.getReadableDatabase();
         return sq.rawQuery("SELECT visitor_name, visitor_address,vehicle_registration_number FROM GateEntries WHERE visitor_mobile = ?", new String[]{mobileNumber});
+    }
+    public void deleteGateEntry(String ReqID) {
+        sq = this.getReadableDatabase();
+        sq.rawQuery("Delete FROM GateEntries WHERE GateReqID = ?", new String[]{ReqID});
     }
 
 

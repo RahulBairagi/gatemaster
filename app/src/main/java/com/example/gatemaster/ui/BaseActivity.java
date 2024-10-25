@@ -23,6 +23,7 @@ import javax.inject.Inject;
 
 import app.GateMasterApplication;
 import busevent.BusEventDefault;
+import busevent.CheckOutBusEvent;
 import busevent.LoginBusEvent;
 import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
@@ -34,7 +35,6 @@ import datamodel.ResponseVisiteeDetails;
 import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
-import model.ResponseData;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -99,10 +99,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             Util.showAlert(this, "Are you sure want to exit the application", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (which == DialogInterface.BUTTON_POSITIVE){
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
                         finishAffinity();
-                    }
-                    else if (which == DialogInterface.BUTTON_NEGATIVE){
+                    } else if (which == DialogInterface.BUTTON_NEGATIVE) {
                         dialog.dismiss();
                     }
                 }
@@ -135,8 +134,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             + call.request().url() + " ===============>" + call.request().body().toString());
                     if (response.body().getTitle().equalsIgnoreCase("OK")) {
                         isSuccess = true;
-                    }
-                    else {
+                    } else {
                         isSuccess = false;
                     }
                 } else {
@@ -165,13 +163,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 isSuccess = false;
                 active = 0;
                 EventBus.getDefault().post(new LoginBusEvent("NO", active, t.getMessage()));
-            };
+            }
+
+            ;
 
         });
     }
-
-
-
 
 
     @Override
@@ -235,13 +232,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseCheckIn>() {
             @Override
             public void onResponse(Call<ResponseCheckIn> call, Response<ResponseCheckIn> response) {
-                if (response.isSuccessful()){
-                    if(response.body().getTitle().equalsIgnoreCase("Created")){
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(),true));
-                    }else{
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(),false));
+                if (response.isSuccessful()) {
+                    if (response.body().getTitle().equalsIgnoreCase("Created")) {
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(), true));
+                    } else {
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), false));
                     }
-                }else{
+                } else {
                     String message = "";
                     try {
                         message = getErrorFromResponse(response.errorBody().string());
@@ -249,19 +246,19 @@ public abstract class BaseActivity extends AppCompatActivity {
                         message = e.getMessage().toString();
                         throw new RuntimeException(e);
                     }
-                    EventBus.getDefault().post(new BusEventDefault(message,false));
+                    EventBus.getDefault().post(new BusEventDefault(message, false));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCheckIn> call, Throwable t) {
-                EventBus.getDefault().post(new BusEventDefault("Error in connecting with Server.",false));
+                EventBus.getDefault().post(new BusEventDefault("Error in connecting with Server.", false));
             }
         });
     }
 
-    public String getErrorFromResponse(String response){
-        String errorBody= response,message = "";
+    public String getErrorFromResponse(String response) {
+        String errorBody = response, message = "";
         try {
             JSONObject jsonObject = new JSONObject(errorBody);
             message = jsonObject.optString("message", "No message found");
@@ -273,8 +270,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    public String postcheckoutapi(String gatereqid){
-        final String[] message = {""};
+    public void postcheckoutapi(String gatereqid, int pos) {
         PostCheckOut postCheckOut = new PostCheckOut();
         postCheckOut.setGateEntriesRequestId(gatereqid);
 
@@ -284,48 +280,48 @@ public abstract class BaseActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseCheckOut>() {
             @Override
             public void onResponse(Call<ResponseCheckOut> call, Response<ResponseCheckOut> response) {
-                if(response.isSuccessful()){
-                    message[0] = response.body().getMessage();
-                }else{
-                    message[0] = getErrorFromResponse(response.errorBody().toString());
+                if (response.isSuccessful()) {
+                    EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Success, pos,response.body().getMessage()));
+                } else {
+                    try {
+                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,getErrorFromResponse(response.errorBody().string())));
+                    } catch (IOException e) {
+                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,e.getMessage()));
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCheckOut> call, Throwable t) {
-
+                EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,t.getMessage().toString()));
             }
         });
-
-
-
-
-        return message[0];
     }
 
 
-    public void getvisitingdetails(String phnnum){
+    public void getvisitingdetails(String phnnum) {
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
-        Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(token,phnnum);
+        Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(token, phnnum);
 
         call.enqueue(new Callback<ResponseVisiteeDetails>() {
 
             @Override
             public void onResponse(Call<ResponseVisiteeDetails> call, Response<ResponseVisiteeDetails> response) {
-                if(response.code() == 200){
-                    if(response.body().getTitle().equalsIgnoreCase("ok")){
-                        EventBus.getDefault().post(new VisiteeDetails(response.body().getResponseData().getName(),response.body().getResponseData().getAddress(),true));
-                    }else{
-                        EventBus.getDefault().post(new VisiteeDetails("","",false));
+                if (response.code() == 200) {
+                    if (response.body().getTitle().equalsIgnoreCase("ok")) {
+                        EventBus.getDefault().post(new VisiteeDetails(response.body().getResponseData().getName(), response.body().getResponseData().getAddress(), true));
+                    } else {
+                        EventBus.getDefault().post(new VisiteeDetails("", "", false));
                     }
-                }else{
-                    EventBus.getDefault().post(new VisiteeDetails("","",false));
+                } else {
+                    EventBus.getDefault().post(new VisiteeDetails("", "", false));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseVisiteeDetails> call, Throwable t) {
-                EventBus.getDefault().post(new VisiteeDetails("","",false));
+                EventBus.getDefault().post(new VisiteeDetails("", "", false));
             }
         });
 
@@ -346,12 +342,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                         databaseConnection.deleteTable("GateEntries");
                         databaseConnection.insertGateEntries(data);
                         Log.d("getActiveentries==========", data.toString());
+                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", true));
                     } else {
                         // Handle unexpected status code (e.g., not 200)
+                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
                         Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
                     }
                 } else {
                     // Handle error case when response is not successful
+                    EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
                     Log.e("getActiveentries", "Response not successful or body is null");
                 }
             }
@@ -360,6 +359,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onFailure(Call<ActiveEntriesResponse> call, Throwable t) {
                 // Handle failure
                 Log.e("getActiveentries", "Request failed: " + t.getMessage());
+                EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
             }
         });
     }

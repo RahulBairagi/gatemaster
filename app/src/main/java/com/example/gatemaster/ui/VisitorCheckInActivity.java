@@ -1,14 +1,10 @@
 package com.example.gatemaster.ui;
 
-import android.annotation.SuppressLint;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.material.card.MaterialCardView;
 import com.mobile.gatemaster.R;
@@ -37,7 +33,7 @@ public class VisitorCheckInActivity extends BaseActivity {
     @Subscribe
     public void onEvent(VisiteeDetails event) {
         hideProgress();
-        if(event.getSuccess()){
+        if (event.getSuccess()) {
             mainrl.setVisibility(View.VISIBLE);
             poprl.setVisibility(View.INVISIBLE);
             name = event.getName();
@@ -45,7 +41,7 @@ public class VisitorCheckInActivity extends BaseActivity {
             visitorphtxtinp.setText(visitormobinp.getText().toString());
             visitorNameEditText.setText(name);
             addressEditText.setText(address);
-        }else{
+        } else {
             mainrl.setVisibility(View.VISIBLE);
             poprl.setVisibility(View.INVISIBLE);
             visitorphtxtinp.setText(visitormobinp.getText().toString());
@@ -62,8 +58,8 @@ public class VisitorCheckInActivity extends BaseActivity {
         if (event.getSuccess()) {
             Util.pushwithFinish(this, HomeActivity.class);
             Util.showToast(this, event.getMessage());
-        }else{
-            Util.showOKAlert(this,event.getMessage());
+        } else {
+            Util.showOKAlert(this, event.getMessage());
         }
     }
 
@@ -108,15 +104,12 @@ public class VisitorCheckInActivity extends BaseActivity {
         visitorphbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (visitormobinp.getText().length() == 10) {
-                    if(Util.isNetworkAvailable(VisitorCheckInActivity.this)) {
-                        showProgress();
-                        getvisitingdetails(visitormobinp.getText().toString());
-                    }else{
-                        Util.showOKAlert(VisitorCheckInActivity.this,"Please check your internet connection and try again later");
-                    }
+
+                if (Util.isNetworkAvailable(VisitorCheckInActivity.this)) {
+                    showProgress();
+                    getvisitingdetails(visitormobinp.getText().toString());
                 } else {
-                    visitormobinp.setError("Invalid Mobile Number");
+                    Util.showOKAlert(VisitorCheckInActivity.this, "Please check your internet connection and try again later");
                 }
             }
         });
@@ -125,18 +118,18 @@ public class VisitorCheckInActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (checkinvalidate()) {
-                    if(Util.isNetworkAvailable(VisitorCheckInActivity.this)){
+                    if (Util.isNetworkAvailable(VisitorCheckInActivity.this)) {
                         showProgress();
                         // Call post check-in here
                         String visitttype = "";
-                        if(visitortoggle){
+                        if (visitortoggle) {
                             visitttype = "1";
-                        }else if(deliverytoggle){
+                        } else if (deliverytoggle) {
                             visitttype = "2";
                         }
-                        postCheckIn("1", visitorNameEditText.getText().toString(), addressEditText.getText().toString(), purposeinptxt.getText().toString(), carRegistrationEditText.getText().toString(), visitttype,visitorphtxtinp.getText().toString());
-                    }else{
-                        Util.showOKAlert(VisitorCheckInActivity.this,"Please check your internet connection and try again later");
+                        postCheckIn("1", visitorNameEditText.getText().toString(), addressEditText.getText().toString(), purposeinptxt.getText().toString(), carRegistrationEditText.getText().toString(), visitttype, visitorphtxtinp.getText().toString());
+                    } else {
+                        Util.showOKAlert(VisitorCheckInActivity.this, "Please check your internet connection and try again later");
                     }
                 }
             }
@@ -161,10 +154,7 @@ public class VisitorCheckInActivity extends BaseActivity {
     public boolean checkinvalidate() {
         boolean validate = true;
 
-        if (visitorphtxtinp.getText().length() != 10) {
-            visitorphtxtinp.setError("Invalid Mobile Number");
-            validate = false;
-        } else if (visitorNameEditText.getText().length() == 0) {
+        if (visitorNameEditText.getText().length() == 0) {
             visitorNameEditText.setError("Invalid Name");
             validate = false;
         } else if (addressEditText.getText().length() == 0) {
@@ -173,11 +163,10 @@ public class VisitorCheckInActivity extends BaseActivity {
         } else if (carRegistrationEditText.getText().length() == 0) {
             carRegistrationEditText.setError("Invalid Car Registration");
             validate = false;
-        }else if(purposeinptxt.getText().length() == 0){
+        } else if (purposeinptxt.getText().length() == 0) {
             purposeinptxt.setError("Invalid Purpose Details");
             validate = false;
-        }
-        else if (deliverytoggle == false && visitortoggle == false) {
+        } else if (deliverytoggle == false && visitortoggle == false) {
             Util.showToast(VisitorCheckInActivity.this, "Select Visit Type");
             validate = false;
         }
