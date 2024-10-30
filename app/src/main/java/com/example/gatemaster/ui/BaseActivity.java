@@ -2,14 +2,18 @@ package com.example.gatemaster.ui;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,6 +39,8 @@ import datamodel.ResponseVisiteeDetails;
 import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
+import model.LogoutResponse;
+import model.VisitorDetailsResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -56,21 +62,32 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public String baseUrl;
 
-    private View progressLayout;
+    private View progressLayout,toplay;
+    private ImageView profileIcon;
     private ProgressWheel progresswheel;
     protected LayoutInflater inflator = null;
 
     public GateApi gateApi;
 
+    public TextView homePageTitle;
+
     public LayoutInflater getInflator() {
         return inflator;
     }
 
-    protected View inflateView(int layoutId) {
+    protected View inflateView(int layoutId,String title,boolean isToolbar) {
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
+        homePageTitle.setText(title);
         View view = getInflator().inflate(layoutId, v);
+        if(isToolbar){
+            toplay.setVisibility(View.VISIBLE);
+        }else {
+            toplay.setVisibility(View.GONE);
+        }
         return view;
     }
+
+
 
     @SuppressLint("MissingInflatedId")
     public void onCreate(Bundle savedInstanceState) {
@@ -81,6 +98,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         databaseConnection = DatabaseConnection.getInstance(this);
         progressLayout = (View) findViewById(R.id.progressLayout);
         progresswheel = (ProgressWheel) findViewById(R.id.progresswheel);
+        toplay = (View)findViewById(R.id.toplay);
+        homePageTitle = (TextView)findViewById(R.id.homePageTitle);
         baseUrl = sharedPref.getString("baseUrl");
         if (baseUrl.length() > 0) {
             Constant.BASE_URL = baseUrl;
@@ -88,6 +107,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Constant.BASE_URL.length() > 0) {
             gateApi = ServiceGenerator.createService(GateApi.class, "", "");
         }
+        profileIcon = (ImageView)findViewById(R.id.profileIcon);
+        profileIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BaseActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+               // Util.pushNext(BaseActivity.this, ProfileActivity.class);
+
+            }
+        });
         create(savedInstanceState);
     }
 
@@ -343,6 +373,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         databaseConnection.insertGateEntries(data);
                         Log.d("getActiveentries==========", data.toString());
                         EventBus.getDefault().post(new BusEventDefault("ActiveEntries", true));
+                        hideProgress();
                     } else {
                         // Handle unexpected status code (e.g., not 200)
                         EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
@@ -363,5 +394,63 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void logoutUser() {
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<LogoutResponse> call = gateApi.logout("Bearer " + token);
+
+        call.enqueue(new Callback<LogoutResponse>() {
+            @Override
+            public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LogoutResponse logoutResponse = response.body();
+                    Log.d("Logout", "Logout message: " + logoutResponse.getMessage());
+                    // Handle successful logout
+                    databaseConnection.clearAllTables();
+                    finishAffinity();
+                    Util.pushNext(BaseActivity.this,LoginActivity.class);
+                } else {
+                    // Handle logout failure
+                    Log.d("Logout", "Logout failed: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LogoutResponse> call, Throwable t) {
+                // Handle request failure
+                Log.d("Logout", "Logout error: " + t.getMessage());
+            }
+        });
+    }
+
+
+
+/*
+    public void fetchVisitorDetails(String mobileNumber) {
+        String authToken = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+
+        Call<VisitorDetailsResponse> call = gateApi.getVisitorDetails(authToken, mobileNumber);
+
+        call.enqueue(new Callback<VisitorDetailsResponse>() {
+            @Override
+            public void onResponse(Call<VisitorDetailsResponse> call, Response<VisitorDetailsResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    VisitorDetailsResponse visitorDetails = response.body();
+                    Log.d("Visitor Details", "Name: " + visitorDetails.getResponseData().getName() +
+                            ", Address: " + visitorDetails.getResponseData().getAddress());
+                } else {
+                    Log.e("Visitor Details", "Failed - Code: " + response.code() +
+                            ", Message: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<VisitorDetailsResponse> call, Throwable t) {
+                Log.e("Visitor Details", "Network Error: " + t.getMessage());
+            }
+        });
+    }
+*/
+
 
 }

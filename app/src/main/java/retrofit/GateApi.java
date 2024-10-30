@@ -17,6 +17,7 @@ import datamodel.UserDetailRequest;
 import datamodel.VersionDataModel;
 import datamodel.VersionDetailRequest;
 import model.ActiveEntriesResponse;
+import model.LogoutResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -45,5 +46,8 @@ public interface GateApi {
 
     @POST("guard/checkout")
     Call<ResponseCheckOut> postcheckout(@Header("Authorization") String authToken, @Body PostCheckOut jsonData);
+
+    @POST("guard/logout")
+    Call<LogoutResponse> logout(@Header("Authorization") String authToken);
 
 }

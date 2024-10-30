@@ -321,5 +321,18 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         sq.rawQuery("Delete FROM GateEntries WHERE GateReqID = ?", new String[]{ReqID});
     }
 
+    public void clearAllTables() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Delete all rows from each table
+        db.execSQL("DELETE FROM UserDetail");
+        db.execSQL("DELETE FROM InvoiceDetail");
+        db.execSQL("DELETE FROM CustomerInvoiceDetail");
+        db.execSQL("DELETE FROM SignatureDetail");
+        db.execSQL("DELETE FROM GateEntries");
+
+        Log.d(TAG, "All tables cleared");
+    }
+
 
 }

@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import app.GateMasterApplication;
 
@@ -24,6 +26,7 @@ import retrofit.GateApi;
 import retrofit2.Retrofit;
 
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 import utils.Constant;
 import utils.SharedPref;
@@ -111,6 +114,14 @@ public class NetworkModule {
         return builder.build();
     }
 
+    Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // Adjust if needed
+            .create();
+
+    OkHttpClient client = new OkHttpClient.Builder()
+            .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .build();
+
     @Provides
     @Singleton
     Retrofit provideRetrofit(OkHttpClient okHttpClient, ObjectMapper jacksonMapper) {
@@ -119,7 +130,9 @@ public class NetworkModule {
                 .addConverterFactory(JacksonConverterFactory.create(jacksonMapper))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(httpUrl)
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
+                .client(client)
                 .build();
     }
 

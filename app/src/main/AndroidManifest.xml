@@ -47,6 +47,14 @@
 
         </activity>
 
+        <activity
+            android:name="com.example.gatemaster.ui.ProfileActivity"
+            android:exported="true">
+
+        </activity>
+
+
+
     </application>
 
 </manifest>

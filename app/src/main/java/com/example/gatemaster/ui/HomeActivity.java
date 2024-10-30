@@ -23,7 +23,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
 
     @Override
     protected void create(Bundle bundle) {
-        setContentView(R.layout.home_portrait);
+        inflateView(R.layout.home_portrait,"Home Page",true);
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 

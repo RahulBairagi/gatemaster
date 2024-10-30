@@ -45,7 +45,7 @@ public class SplashActivity extends BaseActivity  implements View.OnClickListene
     }
 
     private void initData() {
-        inflateView(R.layout.activity_splash);
+        setContentView(R.layout.activity_splash);
         ip = (EditText) findViewById(R.id.editText);
         submit = (Button) findViewById(R.id.btn_submit);
         sencoIcon = (ImageView)findViewById(R.id.imageView);

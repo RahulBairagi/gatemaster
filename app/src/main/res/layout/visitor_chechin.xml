@@ -70,39 +70,7 @@
         android:id="@+id/mainrl"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/menuIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="Menu"
-            android:src="@drawable/ic_menu"  />
 
-        <TextView
-            android:id="@+id/homePageTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/menuIcon"
-            android:layout_centerHorizontal="true"
-            android:text="Check In"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Profile Icon -->
-        <ImageView
-            android:id="@+id/profileIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="Profile"
-            android:src="@drawable/ic_profile" />
 
       <!--  <include
             android:id="@+id/scanDriverLicenseButton"

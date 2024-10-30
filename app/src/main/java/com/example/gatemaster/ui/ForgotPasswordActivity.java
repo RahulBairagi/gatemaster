@@ -25,7 +25,7 @@ public class ForgotPasswordActivity extends BaseActivity {
     }
 
     private void initdata() {
-        inflateView(R.layout.forgot_pwd);
+        setContentView(R.layout.forgot_pwd);
         sendotpbtn = (Button) findViewById(R.id.sendotpbtn).findViewById(R.id.btn);
         chngepwdbtn = (Button) findViewById(R.id.chngepwdbtn).findViewById(R.id.btn);
         verifyotpbtn = (Button) findViewById(R.id.verifyotpbtn).findViewById(R.id.btn);

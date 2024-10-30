@@ -26,7 +26,7 @@ public class VisitorCheckInActivity extends BaseActivity {
 
     @Override
     protected void create(Bundle bundle) {
-        inflateView(R.layout.visitor_chechin);
+        inflateView(R.layout.visitor_chechin,"Check In",true);
         init();
     }
 

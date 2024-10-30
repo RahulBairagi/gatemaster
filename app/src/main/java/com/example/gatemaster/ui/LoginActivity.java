@@ -33,7 +33,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initData() {
-        inflateView(R.layout.login_portrait);
+        inflateView(R.layout.login_portrait,"",false);
         userid = (EditText) findViewById(R.id.userid);
         password = (EditText) findViewById(R.id.password);
         progressLayout = (View) findViewById(R.id.progressLayout);
@@ -114,7 +114,6 @@ public class LoginActivity extends BaseActivity {
     @Subscribe
     public void onEvent(LoginBusEvent loginBusEvent) {
         hideProgress();
-
         if (loginBusEvent.getStrEvent() == "YES") {
             if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK")) {
                 Util.pushNext(this, HomeActivity.class);

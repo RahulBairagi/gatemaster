@@ -2,7 +2,7 @@ package utils;
 
 public class Constant {
     public static final String SHARED_PREF_NAME = "JSHARED_PREFS";
-    public static  String BASE_URL ="http://api.gatecontrolx.com:9000/api/v1/";
+    public static  String BASE_URL ="https://api.gatecontrolx.com:9000/api/v1/";
     public static  int CheckOut_Call = 1;
     public static  int CheckOut_Success = 2;
     public static  int CheckOut_Failed = 3;
