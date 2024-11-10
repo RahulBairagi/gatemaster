@@ -6,11 +6,7 @@ public class Constant {
     public static  int CheckOut_Call = 1;
     public static  int CheckOut_Success = 2;
     public static  int CheckOut_Failed = 3;
-    public static String GuardName = "";
 
-    public static String Date_Format = "yyyy-MM-dd HH:mm:ss";
-
-    public static long Exp_Time = 0;
 
     //"http://125.63.88.147:7401/api/  local acxiom
 //    http://125.63.88.147:2047/api/ 16-02-24
