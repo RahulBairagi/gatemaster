@@ -2,15 +2,22 @@ package com.example.gatemaster.ui;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobile.gatemaster.R;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import app.FirstFragment;
 import app.SecondFragment;
 import app.ThirdFragment;
+import busevent.LoginBusEvent;
+import utils.Constant;
+import utils.SharedPref;
+import utils.Util;
 
 public class HomeActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -21,9 +28,32 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
     ThirdFragment thirdFragment = new ThirdFragment();
 
 
+    @Subscribe
+    public void onEvent(LoginBusEvent loginBusEvent) {
+        hideProgress();
+        if (loginBusEvent.getStrEvent() == "YES") {
+            if (!(loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK"))) {
+                Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @Override
     protected void create(Bundle bundle) {
-        inflateView(R.layout.home_portrait,"Home Page",true);
+        inflateView(R.layout.home_portrait,"",true);
+
+        Constant.GuardName = sharedPref.getString("username");
+
+        if (gettokentimediff() > Constant.Exp_Time){
+            if (Util.isNetworkAvailable(this)) {
+                    showProgress();
+                    executeLoginApi(sharedPref.getString("userid"), sharedPref.getString("pwd"));
+            } else {
+                Util.showOKAlert(this, "Please check your internet connection and try again later");
+            }
+        }
+
+
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);
 

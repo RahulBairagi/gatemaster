@@ -57,7 +57,7 @@
                     android:drawablePadding="@dimen/_8sdp"
                     android:padding="@dimen/_11sdp"
                     android:hint="User Id"
-                    android:inputType="textEmailSubject"
+                    android:inputType="phone"
                     android:singleLine="true"
                     android:textColor="#000"
                     android:textColorHint="#000"

@@ -35,18 +35,19 @@
                 <EditText
                     android:id="@+id/visitormobinp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="@drawable/edittext_border"
                     android:hint="Enter Visitor Mobile Number"
-                    android:padding="@dimen/_10sdp"
+                    android:padding="@dimen/_1sdp"
                     android:inputType="phone"
                     android:layout_margin="@dimen/_10sdp"
-                    android:drawableEnd="@drawable/ic_clear" />
+                     />
 
                 <include
                     android:id="@+id/visitorphnbtn"
                     layout="@layout/button_gatex"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_55sdp"
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:layout_marginRight="@dimen/_10sdp"
                     android:layout_marginTop="5dp"
@@ -103,7 +104,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Driver name  Surname"
-            android:drawableEnd="@drawable/ic_clear"
+            
             app:layout_constraintTop_toBottomOf="@+id/driverSectionTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +115,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Company"
-            android:drawableEnd="@drawable/ic_clear"
+            
             app:layout_constraintTop_toBottomOf="@+id/driverNameEditText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -125,7 +126,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Cell"
-            android:drawableEnd="@drawable/ic_clear"
+            
             app:layout_constraintTop_toBottomOf="@+id/companyEditText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +137,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Driving License Number"
-            android:drawableEnd="@drawable/ic_clear"
+            
             app:layout_constraintTop_toBottomOf="@+id/cellEditText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -150,8 +151,8 @@
             android:text="Visiting Details"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:layout_below="@id/homePageTitle"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"/>
 
         <LinearLayout
@@ -161,7 +162,6 @@
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_centerHorizontal="true"
-            android:padding="@dimen/_3sdp"
             android:id="@+id/visitorll"
             android:layout_below="@id/visitingDetailsTitle">
 
@@ -170,33 +170,44 @@
             <EditText
                 android:id="@+id/visitorphtxtinp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:padding="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/edittext_border"
                 android:hint="Mobile Number"
                 android:inputType="phone"
-                android:maxLength="10"
-                android:drawableEnd="@drawable/ic_clear" />
+                android:maxLength="10" />
 
 
             <EditText
                 android:id="@+id/visitorNameEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:padding="@dimen/_2sdp"
+                android:background="@drawable/edittext_border"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:hint="Name"
-                android:drawableEnd="@drawable/ic_clear" />
+                 />
 
             <EditText
                 android:id="@+id/addressEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:padding="@dimen/_2sdp"
+                android:background="@drawable/edittext_border"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:hint="Address"
-                android:drawableEnd="@drawable/ic_clear" />
+                 />
 
             <EditText
                 android:id="@+id/purposeinptxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:padding="@dimen/_2sdp"
+                android:background="@drawable/edittext_border"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:hint="Purpose"
-                android:drawableEnd="@drawable/ic_clear" />
+                 />
 
         </LinearLayout>
 
@@ -215,9 +226,11 @@
         <EditText
             android:id="@+id/carRegistrationEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_30sdp"
+            android:padding="@dimen/_2sdp"
+            android:background="@drawable/edittext_border"
+            android:layout_marginTop="@dimen/_5sdp"
             android:hint="Car Registration"
-            android:drawableEnd="@drawable/ic_clear"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:layout_below="@+id/vehicleDetailsTitle" />
@@ -226,7 +239,7 @@
             android:id="@+id/scanVehicleDiscButton"
             layout="@layout/button_gatex"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
+            android:layout_height="@dimen/_55sdp"
             android:layout_marginLeft="@dimen/_30sdp"
             android:layout_below="@id/carRegistrationEditText"
             android:layout_centerHorizontal="true"/>
@@ -273,7 +286,7 @@
                     android:layout_gravity="center">
 
 
-                <ImageButton
+                <ImageView
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
                     android:background="@drawable/guest"
@@ -312,7 +325,7 @@
                     android:layout_gravity="center">
 
 
-                    <ImageButton
+                    <ImageView
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="@dimen/_50sdp"
                         android:background="@drawable/delivery"
@@ -340,7 +353,7 @@
             android:id="@+id/checkinbtn"
             layout="@layout/button_gatex"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_55sdp"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_10sdp"
             android:layout_marginTop="16dp"

@@ -63,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
@@ -73,7 +72,7 @@
         <!-- Panic Button -->
         <Button
             android:id="@+id/panicbtn"
-            android:layout_width="@dimen/_100sdp"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="wrap_content"
             android:layout_above="@id/guardname_lbl"
             android:layout_centerHorizontal="true"
@@ -82,10 +81,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="PANIC"
-            android:textSize="@dimen/_15sdp"
+            android:textSize="@dimen/_14sdp"
             android:layout_marginBottom="16dp"
-            android:background="@color/red"
-            android:backgroundTint="@color/red"
+            android:background="@drawable/rounded_panic_bg"
             android:textColor="@android:color/white"
             android:visibility="visible" />
 

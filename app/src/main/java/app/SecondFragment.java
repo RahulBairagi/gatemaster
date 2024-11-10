@@ -98,12 +98,15 @@ public class SecondFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (Util.isNetworkAvailable(getActivity())) {
-                    baseActivity.showProgress();
-                    baseActivity.getActiveEntries();
-                } else {
-                    Util.showOKAlert(getActivity(), "Please check your internet connection and try again later");
+                if (getActivity() != null){
+                    if (Util.isNetworkAvailable(getActivity())) {
+                        baseActivity.showProgress();
+                        baseActivity.getActiveEntries();
+                    } else {
+                        Util.showOKAlert(getActivity(), "Please check your internet connection and try again later");
+                    }
                 }
+
             }
         });
 

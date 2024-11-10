@@ -86,6 +86,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         return view;
     }
+    public SharedPref getSharedPreferences() {
+        return sharedPref;
+    }
 
 
 
@@ -145,6 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void apicall() {
     }
 
+
     public void executeLoginApi(String userID, String password) {
 
         UserDetailRequest userDetailRequest = new UserDetailRequest();
@@ -181,6 +185,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                     databaseConnection.insertUserDetails(response.body().getResponseData().getUser().getEmployeeId(), response.body().getResponseData().getUser().getName(), response.body().getResponseData().getUser().getEmail(), response.body().getResponseData().getUser().getMobile());
 //                    Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
                     sharedPref.save(Constant.PREF_AUTH_TOKEN, response.body().getResponseData().getAccessToken().toString());
+                    sharedPref.saveBool("isloggedin",true);
+                    sharedPref.save("lastlogin",Util.getcurrenttime());
+                    sharedPref.save("pwd",password);
+                    Constant.Exp_Time = response.body().getResponseData().getExpiresIn() / 3600;
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
                     active = 0;
@@ -244,6 +252,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         } catch (final IOException e) {
             return "did not work";
         }
+    }
+
+    public long gettokentimediff(){
+        String lastlogintime = sharedPref.getString("lastlogin");
+        String currenttime = Util.getcurrenttime();
+
+        long diff = Util.getDifferenceInHours(lastlogintime,currenttime,Constant.Date_Format);
+
+        return diff;
     }
 
     public void postCheckIn(String gateid, String name, String address, String purpose, String vehiclenum, String visittype, String mob) {
@@ -408,6 +425,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     // Handle successful logout
                     databaseConnection.clearAllTables();
                     finishAffinity();
+                    sharedPref.saveBool("isloggedin",false);
                     Util.pushNext(BaseActivity.this,LoginActivity.class);
                 } else {
                     // Handle logout failure

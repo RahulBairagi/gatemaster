@@ -20,5 +20,4 @@
         android:textColor="#fff"
         android:textSize="@dimen/_12sdp" />
 
-
 </LinearLayout>
