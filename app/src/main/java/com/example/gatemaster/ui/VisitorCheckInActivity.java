@@ -1,6 +1,11 @@
 package com.example.gatemaster.ui;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +31,7 @@ public class VisitorCheckInActivity extends BaseActivity {
 
     @Override
     protected void create(Bundle bundle) {
-        inflateView(R.layout.visitor_chechin,"Check In",true);
+        inflateView(R.layout.visitor_chechin, "Check In", true);
         init();
     }
 
@@ -86,6 +91,211 @@ public class VisitorCheckInActivity extends BaseActivity {
         mainrl.setVisibility(View.INVISIBLE);
         poprl.setVisibility(View.VISIBLE);
 
+        visitorNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    visitorNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    visitorNameEditText.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = visitorNameEditText.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = visitorNameEditText.getRight() - visitorNameEditText.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - visitorNameEditText.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    visitorNameEditText.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    visitorNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+        addressEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    addressEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    addressEditText.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = addressEditText.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = addressEditText.getRight() - addressEditText.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - addressEditText.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    addressEditText.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    addressEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+        visitorphtxtinp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    visitorphtxtinp.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    visitorphtxtinp.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = visitorphtxtinp.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = visitorphtxtinp.getRight() - visitorphtxtinp.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - visitorphtxtinp.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    visitorphtxtinp.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    visitorphtxtinp.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+        carRegistrationEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    carRegistrationEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    carRegistrationEditText.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = carRegistrationEditText.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = carRegistrationEditText.getRight() - carRegistrationEditText.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - carRegistrationEditText.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    carRegistrationEditText.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    carRegistrationEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+        purposeinptxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    purposeinptxt.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    purposeinptxt.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = purposeinptxt.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = purposeinptxt.getRight() - purposeinptxt.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - purposeinptxt.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    purposeinptxt.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    purposeinptxt.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+        visitormobinp.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    visitormobinp.setCompoundDrawablesWithIntrinsicBounds(0, 0, android.R.drawable.ic_delete, 0);
+                    visitormobinp.setOnTouchListener(new View.OnTouchListener() {
+                        @SuppressLint("ClickableViewAccessibility")
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            Drawable drawable = visitormobinp.getCompoundDrawables()[2]; // Right drawable
+                            if (drawable != null) {
+                                int drawableEnd = visitormobinp.getRight() - visitormobinp.getPaddingEnd();
+                                if (event.getX() >= drawableEnd - visitormobinp.getCompoundDrawables()[2].getBounds().width()) {
+                                    // Drawable on the right clicked
+                                    // Handle your action here
+                                    visitormobinp.setText("");
+                                }
+                            }
+                            return true;
+                        }
+                    });
+                } else {
+                    visitormobinp.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }
+            }
+        });
+
         visitorcard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +314,7 @@ public class VisitorCheckInActivity extends BaseActivity {
         visitorphbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Util.hideKeyBoard(VisitorCheckInActivity.this);
                 if (Util.isNetworkAvailable(VisitorCheckInActivity.this)) {
                     showProgress();
                     getvisitingdetails(visitormobinp.getText().toString());

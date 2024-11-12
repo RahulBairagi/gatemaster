@@ -4,8 +4,12 @@ import static androidx.core.content.res.ResourcesCompat.getColor;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,17 +20,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.gatemaster.ui.BaseActivity;
 import com.example.gatemaster.ui.HomeActivity;
 import com.example.gatemaster.ui.VisitorCheckInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobile.gatemaster.R;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import adapter.AlertAdapter;
 import db.DatabaseConnection;
 import model.AlertItem;
+import utils.Constant;
 import utils.ProgressWheel;
+import utils.SharedPref;
 import utils.Util;
 
 /**
@@ -54,8 +62,6 @@ public class FirstFragment extends Fragment {
     View checkInVisitorLayout,view;
     BottomNavigationView bottomNavigationView;
     TextView guardinfolbl;
-    SharedPreferences sharedPref;
-
     private DatabaseConnection databaseConnection;
 
     public FirstFragment() {
@@ -94,8 +100,7 @@ public class FirstFragment extends Fragment {
         checkInVisitorLayout = view.findViewById(R.id.checkInVisitor);
         recyclerView = view.findViewById(R.id.recyclerView);
         guardinfolbl = view.findViewById(R.id.guardname_lbl);
-        sharedPref = getActivity().getSharedPreferences("MyPrefs", getActivity().MODE_PRIVATE);
-        guardinfolbl.setText(sharedPref.getString("username","Test Guard"));
+        guardinfolbl.setText(Constant.GuardName);
         Button checkInButton = checkInVisitorLayout.findViewById(R.id.btn);
         Button panicbtn = view.findViewById(R.id.panicbtn);
         checkInButton.setText("Check In");
@@ -107,7 +112,7 @@ public class FirstFragment extends Fragment {
         });
 
         panicbtn.setText("PANIC");
-        panicbtn.setBackgroundColor(Color.RED);
+
     }
 
     private void initRecycleView() {
@@ -120,9 +125,9 @@ public class FirstFragment extends Fragment {
 
             alertItems.add(new AlertItem("Security Alert", "Suspicious activity detected"));
             alertItems.add(new AlertItem("Visitor Check-In", "John Doe checked in"));
-            alertItems.add(new AlertItem("Package Received", "Package from Amazon delivered"));
-            alertItems.add(new AlertItem("Fire Alarm", "Fire alarm triggered in Sector A"));
-            alertItems.add(new AlertItem("System Update", "Security system update required"));
+//            alertItems.add(new AlertItem("Package Received", "Package from Amazon delivered"));
+//            alertItems.add(new AlertItem("Fire Alarm", "Fire alarm triggered in Sector A"));
+//            alertItems.add(new AlertItem("System Update", "Security system update required"));
 
             AlertAdapter alertAdapter = new AlertAdapter(alertItems);
             recyclerView.setAdapter(alertAdapter);

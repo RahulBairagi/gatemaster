@@ -12,6 +12,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class Util {
     public static void showToast(Context ctx, String msg) {
         Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
@@ -79,6 +84,50 @@ public class Util {
         });
         alert.show();
 
+    }
+
+    public String convertTimeFormat(String inputTime, String inputFormat, String outputFormat) {
+        try {
+            // Create SimpleDateFormat objects for the input and output formats
+            SimpleDateFormat inputSDF = new SimpleDateFormat(inputFormat);
+            SimpleDateFormat outputSDF = new SimpleDateFormat(outputFormat);
+
+            // Parse the input string to a Date object
+            Date date = inputSDF.parse(inputTime);
+
+            // Format the Date object into the desired output format
+            return outputSDF.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Return null if the format is incorrect
+        }
+    }
+
+    public static long getDifferenceInHours(String startDateString, String endDateString, String dateFormat) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+
+            // Parse the date strings into Date objects
+            Date startDate = sdf.parse(startDateString);
+            Date endDate = sdf.parse(endDateString);
+
+            // Calculate the difference in milliseconds
+            long diffInMillis = endDate.getTime() - startDate.getTime();
+
+            // Convert the difference to hours
+            long diffInHours = diffInMillis / (1000 * 60 * 60);  // Convert milliseconds to hours
+
+            return diffInHours;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;  // Return -1 in case of an error (e.g., invalid date format)
+        }
+    }
+
+    public static String getcurrenttime (){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String currentDateTime = sdf.format(new Date());
+        return currentDateTime;
     }
 
     public static void pushNext(Context ctx, Class activity) {
