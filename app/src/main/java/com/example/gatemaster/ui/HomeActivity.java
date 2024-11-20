@@ -35,6 +35,8 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
             if (!(loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK"))) {
                 Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
             }
+        }else{
+            Util.showToast(HomeActivity.this,loginBusEvent.getStatus());
         }
     }
 
@@ -52,7 +54,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
                 Util.showOKAlert(this, "Please check your internet connection and try again later");
             }
         }
-
 
         bottomNavigationView
                 = findViewById(R.id.bottomNavigationView);

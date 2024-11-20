@@ -299,14 +299,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         message = e.getMessage().toString();
                         throw new RuntimeException(e);
+                    }finally {
+                        EventBus.getDefault().post(new BusEventDefault(message, false));
                     }
-                    EventBus.getDefault().post(new BusEventDefault(message, false));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseCheckIn> call, Throwable t) {
-                EventBus.getDefault().post(new BusEventDefault("Error in connecting with Server.", false));
+                EventBus.getDefault().post(new BusEventDefault(t.getMessage(), false));
             }
         });
     }
@@ -529,6 +530,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                         String newToken = response.body().getResponseData().getAccess_token();
                         int expiresIn = response.body().getResponseData().getExpires_in(); // in seconds
                         sharedPref.save(Constant.PREF_AUTH_TOKEN, newToken);
+                        sharedPref.saveBool("isloggedin",true);
+                        sharedPref.save("lastlogin",Util.getcurrenttime());
                         scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
 
                         Log.d("TokenRefresh", "Token refreshed successfully");

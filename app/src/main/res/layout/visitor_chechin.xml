@@ -231,6 +231,8 @@
             android:background="@drawable/edittext_border"
             android:layout_marginTop="@dimen/_5sdp"
             android:hint="Car Registration"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+            android:textAllCaps="true"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp"
             android:layout_below="@+id/vehicleDetailsTitle" />

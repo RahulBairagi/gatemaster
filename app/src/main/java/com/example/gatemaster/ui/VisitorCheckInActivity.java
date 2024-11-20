@@ -11,7 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.card.MaterialCardView;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
 import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -27,7 +36,7 @@ public class VisitorCheckInActivity extends BaseActivity {
     RelativeLayout mainrl, poprl;
     EditText visitormobinp, visitorphtxtinp, visitorNameEditText, addressEditText, carRegistrationEditText, purposeinptxt;
 
-    private String name, address, carRegistration = "";
+    private String name, address, carRegistration = "", licnum = "";
 
     @Override
     protected void create(Bundle bundle) {
@@ -115,9 +124,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     visitorNameEditText.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -149,9 +159,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     addressEditText.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -183,9 +194,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     visitorphtxtinp.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -217,9 +229,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     carRegistrationEditText.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -251,9 +264,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     purposeinptxt.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -285,9 +299,10 @@ public class VisitorCheckInActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     visitormobinp.setText("");
+                                    return true;
                                 }
                             }
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -359,6 +374,34 @@ public class VisitorCheckInActivity extends BaseActivity {
                 }
             }
         });
+
+        scanVehDisc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GmsBarcodeScannerOptions options = new GmsBarcodeScannerOptions.Builder()
+                        .setBarcodeFormats(
+                                Barcode.FORMAT_PDF417)
+                        .build();
+                GmsBarcodeScanner scanner = GmsBarcodeScanning.getClient(VisitorCheckInActivity.this, options);
+                scanner.startScan().addOnSuccessListener(new OnSuccessListener<Barcode>() {
+                    @Override
+                    public void onSuccess(Barcode barcode) {
+                        parsescandata(barcode.getRawValue());
+                    }
+                }).addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        Util.showToast(VisitorCheckInActivity.this, "Scan Cancelled");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Util.showOKAlert(VisitorCheckInActivity.this, "Scan Failed with error - " + e.getMessage());
+                    }
+                });
+
+            }
+        });
     }
 
     public boolean checkinvalidate() {
@@ -381,6 +424,16 @@ public class VisitorCheckInActivity extends BaseActivity {
             validate = false;
         }
         return validate;
+    }
+
+    public void parsescandata(String data) {
+        if (data.contains("%")) {
+            String[] scndata = data.split("%");
+            carRegistration = scndata[7];
+            licnum = scndata[6];
+            carRegistrationEditText.setText(carRegistration);
+            carRegistrationEditText.setEnabled(false);
+        }
     }
 
 }

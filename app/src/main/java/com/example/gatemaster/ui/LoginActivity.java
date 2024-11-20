@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initData() {
-        inflateView(R.layout.login_portrait,"",false);
+        inflateView(R.layout.login_portrait, "", false);
         userid = (EditText) findViewById(R.id.userid);
         password = (EditText) findViewById(R.id.password);
         progressLayout = (View) findViewById(R.id.progressLayout);
@@ -47,19 +47,19 @@ public class LoginActivity extends BaseActivity {
         loginBtn.setText("Login");
         fgtbtn.setText("Forgot Password");
 
-//        userid.setText("001");
-//        password.setText("001");
+        userid.setText("001");
+        password.setText("001");
 
         fgtbtn.setVisibility(View.GONE);
 
-        if (sharedPref.getBool("isloggedin")){
-            Util.pushNext(this,HomeActivity.class);
+        if (sharedPref.getBool("isloggedin")) {
+            Util.pushNext(this, HomeActivity.class);
         }
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validate()){
+                if (validate()) {
                     loginBtnCLick();
                 }
             }
@@ -96,11 +96,10 @@ public class LoginActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     userid.setText("");
+                                    return true;
                                 }
                             }
-
-
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -133,11 +132,10 @@ public class LoginActivity extends BaseActivity {
                                     // Drawable on the right clicked
                                     // Handle your action here
                                     password.setText("");
+                                    return true;
                                 }
                             }
-
-
-                            return true;
+                            return false;
                         }
                     });
                 } else {
@@ -184,7 +182,7 @@ public class LoginActivity extends BaseActivity {
                 Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Please try again later", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
         }
     }
 

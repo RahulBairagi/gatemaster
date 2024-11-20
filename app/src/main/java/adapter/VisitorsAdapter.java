@@ -11,25 +11,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.gatemaster.ui.BaseActivity;
 import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import busevent.CheckOutBusEvent;
 import model.Visitor;
 import utils.Constant;
-import utils.Util;
 
 public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.VisitorViewHolder> {
 
-    private List<Visitor> visitorsList;
+    private List<Visitor> visitorList;
+    private List<Visitor> filteredList;
     private Activity context;
 
     public VisitorsAdapter(List<Visitor> visitorsList, Activity context) {
-        this.visitorsList = visitorsList;
+        this.visitorList = new ArrayList<>(visitorsList);
+        this.filteredList = new ArrayList<>(visitorsList);
         this.context = context;
     }
 
@@ -41,7 +42,7 @@ public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.Visito
     }
     @Override
     public void onBindViewHolder(@NonNull VisitorViewHolder holder, int position) {
-        Visitor entry = visitorsList.get(position);
+        Visitor entry = filteredList.get(position);
         holder.tvVisitorName.setText(entry.getVisitorName());
         holder.tvVisitorMobile.setText("Mobile: " + entry.getVisitorMobile());
         holder.tvVehicleRegistration.setText("Vehicle: " + entry.getVehicleRegistrationNumber());
@@ -51,20 +52,35 @@ public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.Visito
         holder.checkout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new CheckOutBusEvent(visitorsList.get(holder.getAdapterPosition()).getGateReqID(), Constant.CheckOut_Call,holder.getAdapterPosition(),""));
+                EventBus.getDefault().post(new CheckOutBusEvent(filteredList.get(holder.getAdapterPosition()).getGateReqID(), Constant.CheckOut_Call,holder.getAdapterPosition(),""));
             }
         });
     }
 
+    public void filter(String query) {
+        filteredList.clear();
+        if (query.isEmpty()) {
+            filteredList.addAll(visitorList); // Show all items when query is empty
+        } else {
+            for (Visitor item : visitorList) {
+                if (item.getVehicleRegistrationNumber().toUpperCase().contains(query.toUpperCase()) || item.getVisitorName().toUpperCase().contains(query.toUpperCase())) {
+                    filteredList.add(item); // Add matching items
+                }
+            }
+        }
+        notifyDataSetChanged(); // Notify the adapter about data changes
+    }
+
+
     public void removeItem(int position) {
-        visitorsList.remove(position);
+        filteredList.remove(position);
         notifyItemRemoved(position); // Notify RecyclerView about item removal
-        notifyItemRangeChanged(position, visitorsList.size()); // Refresh remaining items
+        notifyItemRangeChanged(position, filteredList.size()); // Refresh remaining items
     }
 
     @Override
     public int getItemCount() {
-        return visitorsList.size();
+        return filteredList.size();
     }
 
     public static class VisitorViewHolder extends RecyclerView.ViewHolder {
