@@ -12,6 +12,8 @@ import java.util.Map;
 
 import javax.annotation.processing.Generated;
 
+import io.reactivex.Scheduler;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "id",
@@ -41,7 +43,7 @@ import javax.annotation.processing.Generated;
         "modified_by"
 })
 @Generated("jsonschema2pojo")
-public class User {
+public class User  {
 
     @JsonProperty("id")
     private Integer id;

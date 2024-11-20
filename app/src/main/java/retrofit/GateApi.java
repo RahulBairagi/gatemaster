@@ -13,6 +13,7 @@ import datamodel.ResponseCheckOut;
 import datamodel.ResponseVisiteeDetails;
 import datamodel.SignatureDataModel;
 import datamodel.SignatureDetailRequest;
+import datamodel.TokenRefreshModel;
 import datamodel.UserDetailRequest;
 import datamodel.VersionDataModel;
 import datamodel.VersionDetailRequest;
@@ -49,5 +50,10 @@ public interface GateApi {
 
     @POST("guard/logout")
     Call<LogoutResponse> logout(@Header("Authorization") String authToken);
+
+    @POST("guard/refresh")
+    Call<TokenRefreshModel> refreshToken(@Header("Authorization") String authToken);
+
+
 
 }

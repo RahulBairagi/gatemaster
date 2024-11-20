@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import datamodel.PostCheckOut;
 import datamodel.ResponseCheckIn;
 import datamodel.ResponseCheckOut;
 import datamodel.ResponseVisiteeDetails;
+import datamodel.TokenRefreshModel;
 import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
@@ -74,6 +76,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public LayoutInflater getInflator() {
         return inflator;
     }
+
+
 
     protected View inflateView(int layoutId,String title,boolean isToolbar) {
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
@@ -189,6 +193,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     sharedPref.save("lastlogin",Util.getcurrenttime());
                     sharedPref.save("pwd",password);
                     Constant.Exp_Time = response.body().getResponseData().getExpiresIn() / 3600;
+                    int expiresIn = response.body().getResponseData().getExpiresIn(); // in seconds
+                    scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
+
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
                     active = 0;
@@ -423,6 +430,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     LogoutResponse logoutResponse = response.body();
                     Log.d("Logout", "Logout message: " + logoutResponse.getMessage());
                     // Handle successful logout
+                    stopTokenRefresh();
                     databaseConnection.clearAllTables();
                     finishAffinity();
                     sharedPref.saveBool("isloggedin",false);
@@ -469,6 +477,74 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 */
+
+
+    private Handler handler;
+    private Runnable tokenRefreshRunnable;
+
+    // Call this method to schedule the token refresh
+    private void scheduleTokenRefresh(int delayInSeconds) {
+        if (handler == null) {
+            handler = new Handler();  // Initialize Handler if it's not already initialized
+        }
+
+        // If tokenRefreshRunnable has already been initialized, we can reuse it.
+        // Otherwise, create a new one.
+        if (tokenRefreshRunnable == null) {
+            tokenRefreshRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("TokenRefresh", "Run()");
+                    refreshToken();
+                }
+            };
+        }
+
+        handler.postDelayed(tokenRefreshRunnable, delayInSeconds * 1000L);
+        Log.d("TokenRefresh", "Token refresh scheduled in " + delayInSeconds + " seconds.");
+    }
+
+
+    private void stopTokenRefresh() {
+        if (handler == null || tokenRefreshRunnable == null) {
+            Log.d("TokenRefresh", "Handler or Runnable is null");
+        }
+        if (handler != null && tokenRefreshRunnable != null) {
+            handler.removeCallbacks(tokenRefreshRunnable);
+            Log.d("TokenRefresh", "Token refresh timer stopped.");
+        }
+    }
+
+
+
+    private void refreshToken() {
+        String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        if (!currentToken.isEmpty()) {
+            Call<TokenRefreshModel> call = gateApi.refreshToken("Bearer " + currentToken);
+
+            call.enqueue(new Callback<TokenRefreshModel>() {
+                @Override
+                public void onResponse(Call<TokenRefreshModel> call, Response<TokenRefreshModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        String newToken = response.body().getResponseData().getAccess_token();
+                        int expiresIn = response.body().getResponseData().getExpires_in(); // in seconds
+                        sharedPref.save(Constant.PREF_AUTH_TOKEN, newToken);
+                        scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
+
+                        Log.d("TokenRefresh", "Token refreshed successfully");
+                    } else {
+                        Log.e("TokenRefresh", "Token refresh failed: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TokenRefreshModel> call, Throwable t) {
+                    Log.e("TokenRefresh", "Token refresh failed", t);
+                }
+            });
+        }
+    }
+
 
 
 }

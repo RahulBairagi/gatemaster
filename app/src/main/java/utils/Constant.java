@@ -1,5 +1,7 @@
 package utils;
 
+import android.os.Handler;
+
 public class Constant {
     public static final String SHARED_PREF_NAME = "JSHARED_PREFS";
     public static  String BASE_URL ="https://api.gatecontrolx.com:9000/api/v1/";
@@ -9,6 +11,9 @@ public class Constant {
     public static String GuardName = "";
 
     public static String Date_Format = "yyyy-MM-dd HH:mm:ss";
+
+    public static final long REFRESH_INTERVAL = 2 * 60 * 60 * 1000; // 2 hours in milliseconds
+
 
     public static long Exp_Time = 0;
 
