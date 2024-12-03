@@ -43,7 +43,6 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
     @Override
     protected void create(Bundle bundle) {
         inflateView(R.layout.home_portrait,"",true);
-
         Constant.GuardName = sharedPref.getString("username");
 
         if (gettokentimediff() > Constant.Exp_Time){
@@ -76,6 +75,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.tabhome:
+                inflateView(R.layout.home_portrait,"",true);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flFragment, firstFragment)
@@ -83,6 +83,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
                 return true;
 
             case R.id.tabvisitor:
+                inflateView(R.layout.home_portrait,"",false);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flFragment, secondFragment)
@@ -90,6 +91,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
                 return true;
 
             case R.id.tabnotification:
+                inflateView(R.layout.home_portrait,"",false);
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.flFragment, thirdFragment)

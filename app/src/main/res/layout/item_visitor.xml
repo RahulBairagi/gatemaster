@@ -90,14 +90,25 @@
                 android:layout_height="wrap_content"
                 android:text="Entry Time: 2024-10-19 18:12:06"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:paddingTop="4dp"/>
 
-            <include
-                layout="@layout/button_gatex"
+            <Button
+                android:id="@+id/checkoutbtn"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
-                android:id="@+id/checkoutbtn"/>
+                android:layout_height="40dp"
+                android:layout_marginStart="6dp"
+                style="@style/CustomButton"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="6dp"
+                android:text="CHECK OUT"
+                android:textSize="@dimen/_13sdp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/rounded_checkout_bg"
+                android:textColor="@android:color/white"
+                android:visibility="visible" />
 
         </LinearLayout>
 

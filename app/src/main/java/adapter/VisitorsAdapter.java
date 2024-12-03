@@ -73,10 +73,17 @@ public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.Visito
 
 
     public void removeItem(int position) {
+        int pos = visitorList.indexOf(filteredList.get(position));
         filteredList.remove(position);
+        visitorList.remove(pos);
         notifyItemRemoved(position); // Notify RecyclerView about item removal
         notifyItemRangeChanged(position, filteredList.size()); // Refresh remaining items
     }
+
+    public List<Visitor> getfilterlist(){
+        return this.filteredList;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -96,8 +103,7 @@ public class VisitorsAdapter extends RecyclerView.Adapter<VisitorsAdapter.Visito
             tvVisitorAddress = itemView.findViewById(R.id.tvVisitorAddress);
             tvPurpose = itemView.findViewById(R.id.tvPurpose);
             tvEntryTime = itemView.findViewById(R.id.tvEntryTime);
-            checkout = itemView.findViewById(R.id.checkoutbtn).findViewById(R.id.btn);
-            checkout.setText("Check Out");
+            checkout = itemView.findViewById(R.id.checkoutbtn);
             context = itemView.getContext();
         }
     }

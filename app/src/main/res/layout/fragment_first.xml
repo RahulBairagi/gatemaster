@@ -46,7 +46,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             tools:listitem="@layout/item_alert" />
 
-        <include
+  <!--      <include
             android:id="@+id/checkInVisitor"
             layout="@layout/button_gatex"
             android:layout_width="wrap_content"
@@ -55,24 +55,31 @@
             android:layout_centerHorizontal="true"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp" />
-
-        <!--<include
-            android:id="@+id/panicbtn"
-            layout="@layout/button_gatex"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
             android:layout_marginEnd="16dp"
+            android:visibility="invisible"/>-->
+
+
+        <Button
+            android:id="@+id/checkInVisitor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/panicbtn"
             android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            style="@style/CustomButton"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="Check In"
+            android:textSize="@dimen/_14sdp"
+            android:background="@drawable/rounded_checkin_bg"
             android:textColor="@android:color/white"
-            android:visibility="visible"
-            android:layout_above="@id/guardname_lbl"/>-->
+            android:visibility="visible" />
+
 
         <!-- Panic Button -->
         <Button
             android:id="@+id/panicbtn"
-            android:layout_width="@dimen/_120sdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@id/guardname_lbl"
             android:layout_centerHorizontal="true"

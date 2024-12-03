@@ -32,7 +32,6 @@ public class LoginActivity extends BaseActivity {
     protected void create(Bundle bundle) {
         databaseConnection = new DatabaseConnection(this);
         initData();
-
     }
 
     private void initData() {
@@ -47,8 +46,8 @@ public class LoginActivity extends BaseActivity {
         loginBtn.setText("Login");
         fgtbtn.setText("Forgot Password");
 
-        userid.setText("001");
-        password.setText("001");
+//        userid.setText("001");
+//        password.setText("001");
 
         fgtbtn.setVisibility(View.GONE);
 

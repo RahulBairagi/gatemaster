@@ -7,14 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.gson.Gson;
 import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,7 +44,6 @@ import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
 import model.LogoutResponse;
-import model.VisitorDetailsResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -64,10 +65,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public String baseUrl;
 
-    private View progressLayout,toplay;
-    private ImageView profileIcon;
+    private View progressLayout, toplay;
+    private ImageView profileIcon, spnrarrw, locationicon;
     private ProgressWheel progresswheel;
     protected LayoutInflater inflator = null;
+    private Spinner gateSpinner;
 
     public GateApi gateApi;
 
@@ -78,22 +80,45 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
-    protected View inflateView(int layoutId,String title,boolean isToolbar) {
+    protected View inflateView(int layoutId, String title, boolean isToolbar) {
         ViewGroup v = (ViewGroup) findViewById(R.id.content);
         homePageTitle.setText(title);
+        if (BaseActivity.this instanceof HomeActivity) {
+            gateSpinner.setVisibility(View.VISIBLE);
+            spnrarrw.setVisibility(View.VISIBLE);
+            profileIcon.setVisibility(View.VISIBLE);
+            locationicon.setVisibility(View.VISIBLE);
+        } else {
+            gateSpinner.setVisibility(View.GONE);
+            spnrarrw.setVisibility(View.GONE);
+            profileIcon.setVisibility(View.GONE);
+            locationicon.setVisibility(View.GONE);
+        }
+        gateSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    spnrarrw.setVisibility(View.INVISIBLE);
+                } else if (event.getAction() == MotionEvent.ACTION_UP){
+                    spnrarrw.setVisibility(View.VISIBLE);
+                }
+                return false;
+            }
+        });
+
+
         View view = getInflator().inflate(layoutId, v);
-        if(isToolbar){
+        if (isToolbar) {
             toplay.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             toplay.setVisibility(View.GONE);
         }
         return view;
     }
+
     public SharedPref getSharedPreferences() {
         return sharedPref;
     }
-
 
 
     @SuppressLint("MissingInflatedId")
@@ -105,8 +130,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         databaseConnection = DatabaseConnection.getInstance(this);
         progressLayout = (View) findViewById(R.id.progressLayout);
         progresswheel = (ProgressWheel) findViewById(R.id.progresswheel);
-        toplay = (View)findViewById(R.id.toplay);
-        homePageTitle = (TextView)findViewById(R.id.homePageTitle);
+        toplay = (View) findViewById(R.id.toplay);
+        homePageTitle = (TextView) findViewById(R.id.homePageTitle);
+        gateSpinner = (Spinner) findViewById(R.id.gatespnr);
+        gateSpinner.setDropDownVerticalOffset(100);
+        spnrarrw = (ImageView) findViewById(R.id.gatespnrarrw);
+        locationicon = (ImageView) findViewById(R.id.gatespnricon);
+
+        String[] spinnerdata = {"Gate 01", "Gate 02", "Gate 03", "Gate 04", "Gate 05", "Gate 06"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spnr, spinnerdata);
+        adapter.setDropDownViewResource(R.layout.item_spnr);
+        gateSpinner.setAdapter(adapter);
+
         baseUrl = sharedPref.getString("baseUrl");
         if (baseUrl.length() > 0) {
             Constant.BASE_URL = baseUrl;
@@ -114,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Constant.BASE_URL.length() > 0) {
             gateApi = ServiceGenerator.createService(GateApi.class, "", "");
         }
-        profileIcon = (ImageView)findViewById(R.id.profileIcon);
+        profileIcon = (ImageView) findViewById(R.id.profileIcon);
         profileIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,9 +225,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                     databaseConnection.insertUserDetails(response.body().getResponseData().getUser().getEmployeeId(), response.body().getResponseData().getUser().getName(), response.body().getResponseData().getUser().getEmail(), response.body().getResponseData().getUser().getMobile());
 //                    Constant.PREF_AUTH_TOKEN = response.body().getResponseData().getAccessToken().toString();
                     sharedPref.save(Constant.PREF_AUTH_TOKEN, response.body().getResponseData().getAccessToken().toString());
-                    sharedPref.saveBool("isloggedin",true);
-                    sharedPref.save("lastlogin",Util.getcurrenttime());
-                    sharedPref.save("pwd",password);
+                    sharedPref.saveBool("isloggedin", true);
+                    sharedPref.save("lastlogin", Util.getcurrenttime());
+                    sharedPref.save("pwd", password);
                     Constant.Exp_Time = response.body().getResponseData().getExpiresIn() / 3600;
                     int expiresIn = response.body().getResponseData().getExpiresIn(); // in seconds
                     scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
@@ -261,11 +297,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public long gettokentimediff(){
+    public long gettokentimediff() {
         String lastlogintime = sharedPref.getString("lastlogin");
         String currenttime = Util.getcurrenttime();
 
-        long diff = Util.getDifferenceInHours(lastlogintime,currenttime,Constant.Date_Format);
+        long diff = Util.getDifferenceInHours(lastlogintime, currenttime, Constant.Date_Format);
 
         return diff;
     }
@@ -299,7 +335,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         message = e.getMessage().toString();
                         throw new RuntimeException(e);
-                    }finally {
+                    } finally {
                         EventBus.getDefault().post(new BusEventDefault(message, false));
                     }
                 }
@@ -336,12 +372,12 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseCheckOut> call, Response<ResponseCheckOut> response) {
                 if (response.isSuccessful()) {
-                    EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Success, pos,response.body().getMessage()));
+                    EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Success, pos, response.body().getMessage()));
                 } else {
                     try {
-                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,getErrorFromResponse(response.errorBody().string())));
+                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos, getErrorFromResponse(response.errorBody().string())));
                     } catch (IOException e) {
-                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,e.getMessage()));
+                        EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos, e.getMessage()));
                         throw new RuntimeException(e);
                     }
                 }
@@ -349,7 +385,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseCheckOut> call, Throwable t) {
-                EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos,t.getMessage().toString()));
+                EventBus.getDefault().post(new CheckOutBusEvent(gatereqid, Constant.CheckOut_Failed, pos, t.getMessage().toString()));
             }
         });
     }
@@ -434,8 +470,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     stopTokenRefresh();
                     databaseConnection.clearAllTables();
                     finishAffinity();
-                    sharedPref.saveBool("isloggedin",false);
-                    Util.pushNext(BaseActivity.this,LoginActivity.class);
+                    sharedPref.saveBool("isloggedin", false);
+                    Util.pushNext(BaseActivity.this, LoginActivity.class);
                 } else {
                     // Handle logout failure
                     Log.d("Logout", "Logout failed: " + response.code());
@@ -517,7 +553,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
     private void refreshToken() {
         String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         if (!currentToken.isEmpty()) {
@@ -530,8 +565,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                         String newToken = response.body().getResponseData().getAccess_token();
                         int expiresIn = response.body().getResponseData().getExpires_in(); // in seconds
                         sharedPref.save(Constant.PREF_AUTH_TOKEN, newToken);
-                        sharedPref.saveBool("isloggedin",true);
-                        sharedPref.save("lastlogin",Util.getcurrenttime());
+                        sharedPref.saveBool("isloggedin", true);
+                        sharedPref.save("lastlogin", Util.getcurrenttime());
                         scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
 
                         Log.d("TokenRefresh", "Token refreshed successfully");
@@ -547,7 +582,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             });
         }
     }
-
 
 
 }

@@ -59,7 +59,7 @@ public class FirstFragment extends Fragment {
     private View progressLayout;
     private ProgressWheel progresswheel;
 
-    View checkInVisitorLayout,view;
+    View view;
     BottomNavigationView bottomNavigationView;
     TextView guardinfolbl;
     private DatabaseConnection databaseConnection;
@@ -97,13 +97,11 @@ public class FirstFragment extends Fragment {
 
     private void init(View view) {
         databaseConnection = new DatabaseConnection(getContext());
-        checkInVisitorLayout = view.findViewById(R.id.checkInVisitor);
         recyclerView = view.findViewById(R.id.recyclerView);
         guardinfolbl = view.findViewById(R.id.guardname_lbl);
         guardinfolbl.setText(Constant.GuardName);
-        Button checkInButton = checkInVisitorLayout.findViewById(R.id.btn);
+        Button checkInButton = view.findViewById(R.id.checkInVisitor);
         Button panicbtn = view.findViewById(R.id.panicbtn);
-        checkInButton.setText("Check In");
         checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

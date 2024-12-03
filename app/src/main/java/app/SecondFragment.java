@@ -76,8 +76,11 @@ public class SecondFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(false);
             Util.showOKAlert(getActivity(), checkOutBusEvent.getMsg().isEmpty() ? "Check Out Successful" : checkOutBusEvent.getMsg());
             databaseConnection.deleteGateEntry(checkOutBusEvent.getReqID());
+            int pos = visitorsList.indexOf(visitorsAdapter.getfilterlist().get(checkOutBusEvent.getPos()));
+            visitorsList.remove(pos);
+            visitorsAdapter.removeItem(checkOutBusEvent.getPos());
+            visitorsAdapter.notifyItemRemoved(pos);
             visitorsAdapter.notifyDataSetChanged();
-            visitorsList.remove(checkOutBusEvent.getPos());
         } else if (checkOutBusEvent.getType() == Constant.CheckOut_Failed) {
             baseActivity.hideProgress();
             swipeRefreshLayout.setRefreshing(false);
@@ -111,6 +114,7 @@ public class SecondFragment extends Fragment {
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Util.hideKeyBoard(getActivity());
                 visitorsAdapter.filter(searchedt.getText().toString());
             }
         });

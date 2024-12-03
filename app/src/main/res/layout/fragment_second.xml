@@ -37,6 +37,7 @@
                 android:id="@+id/searchedt"
                 android:layout_marginEnd="@dimen/_29sdp"
                 android:textSize="@dimen/_13sdp"
+                android:singleLine="true"
                 android:padding="@dimen/_5sdp"
                 android:background="@null"/>
 
@@ -66,7 +67,7 @@
             <ImageView
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/barcodescan"
+                android:src="@drawable/scanner"
                 android:layout_gravity="center"/>
 
         </com.google.android.material.card.MaterialCardView>
