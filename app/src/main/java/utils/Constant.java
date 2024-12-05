@@ -9,6 +9,8 @@ public class Constant {
     public static  int CheckOut_Success = 2;
     public static  int CheckOut_Failed = 3;
     public static String GuardName = "";
+    public static String DEF_MAC = "02:00:00:00:00:00";
+    public static String DEF_DEV = "Android";
 
     public static String Date_Format = "yyyy-MM-dd HH:mm:ss";
 

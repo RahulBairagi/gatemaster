@@ -60,6 +60,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (validate()) {
                     loginBtnCLick();
+//                    Util.showOKAlert(LoginActivity.this,Util.getMacAddress(LoginActivity.this));
                 }
             }
         });

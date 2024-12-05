@@ -1,20 +1,31 @@
 package utils;
 
+import static android.content.Context.WIFI_SERVICE;
+
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Util {
@@ -100,6 +111,39 @@ public class Util {
         } catch (ParseException e) {
             e.printStackTrace();
             return null; // Return null if the format is incorrect
+        }
+    }
+
+    public static Boolean checkWifiStatePermission(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_WIFI_STATE)
+                == PackageManager.PERMISSION_GRANTED) {
+            // Permission is granted
+            return true;
+        } else {
+            // Request the permission
+            ActivityCompat.requestPermissions(
+                    (Activity) context,
+                    new String[]{Manifest.permission.ACCESS_WIFI_STATE},
+                    1
+            );
+            return false;
+        }
+    }
+
+    public static String getMacAddress(Context context) {
+        String mac = Constant.DEF_MAC;
+        if (checkWifiStatePermission(context)){
+            try {
+                WifiManager wifiMgr = (WifiManager) context.getSystemService(WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+                mac = wifiInfo.getMacAddress();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                return mac; // Default MAC address when access is restricted
+            }
+        }else{
+            return mac;
         }
     }
 

@@ -48,7 +48,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
         if (gettokentimediff() > Constant.Exp_Time){
             if (Util.isNetworkAvailable(this)) {
                 showProgress();
-                executeLoginApi(sharedPref.getString("userid"), sharedPref.getString("pwd"));
+                refreshToken();
             } else {
                 Util.showOKAlert(this, "Please check your internet connection and try again later");
             }

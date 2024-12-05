@@ -18,6 +18,7 @@ import datamodel.UserDetailRequest;
 import datamodel.VersionDataModel;
 import datamodel.VersionDetailRequest;
 import model.ActiveEntriesResponse;
+import model.GetGatesResponse;
 import model.LogoutResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -39,6 +40,11 @@ public interface GateApi {
 
     @GET("guard/getactiveentries")
     Call<ActiveEntriesResponse> getActiveEntries(@Header("Authorization") String authToken);
+
+
+    @GET("guard/gates")
+    Call<GetGatesResponse> getAllGates(@Header("Authorization") String authToken);
+
 
     @GET("guard/getvisitordetails/{mobileNumber}")
     Call<ResponseVisiteeDetails> getVisiteeDetails(

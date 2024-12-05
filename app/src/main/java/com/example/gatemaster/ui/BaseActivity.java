@@ -43,6 +43,7 @@ import datamodel.TokenRefreshModel;
 import datamodel.UserDetailRequest;
 import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
+import model.GetGatesResponse;
 import model.LogoutResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -191,9 +192,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void executeLoginApi(String userID, String password) {
 
+        String devid = Util.getMacAddress(this);
+
         UserDetailRequest userDetailRequest = new UserDetailRequest();
         userDetailRequest.setEmployeeId(userID);
         userDetailRequest.setEmployeePin(password);
+        userDetailRequest.setDeviceId(devid);
+        userDetailRequest.setDeviceType(Constant.DEF_DEV);
 
         Call<LoginDataModel> loginDataModelCall = gateApi.userValidate(userDetailRequest);
 
@@ -232,7 +237,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     int expiresIn = response.body().getResponseData().getExpiresIn(); // in seconds
                     scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
 
-                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
+                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getMessage()));
                 } else {
                     active = 0;
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.message()));
@@ -324,7 +329,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseCheckIn> call, Response<ResponseCheckIn> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getTitle().equalsIgnoreCase("Created")) {
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getTitle(), true));
+                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), true));
                     } else {
                         EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), false));
                     }
@@ -391,7 +396,46 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    public void getvisitingdetails(String phnnum) {
+    public void getallgates() {
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        Call<GetGatesResponse> call = gateApi.getAllGates(token);
+
+        call.enqueue(new Callback<GetGatesResponse>() {
+            @Override
+            public void onResponse(Call<GetGatesResponse> call, Response<GetGatesResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    GetGatesResponse data = response.body();
+
+                    // Check the statusCode from the response
+                    if ("200".equals(data.getStatusCode())) {
+//                        databaseConnection.deleteTable("GateEntries");
+//                        databaseConnection.insertGateEntries(data);
+                        Log.d("getActiveentries==========", data.toString());
+//                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", true));
+                        hideProgress();
+                    } else {
+                        // Handle unexpected status code (e.g., not 200)
+                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                        Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
+                    }
+                } else {
+                    // Handle error case when response is not successful
+                    EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                    Log.e("getActiveentries", "Response not successful or body is null");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetGatesResponse> call, Throwable t) {
+                // Handle failure
+                Log.e("getActiveentries", "Request failed: " + t.getMessage());
+                EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+            }
+        });
+
+    }
+
+        public void getvisitingdetails(String phnnum) {
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         Call<ResponseVisiteeDetails> call = gateApi.getVisiteeDetails(token, phnnum);
 
@@ -553,7 +597,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    private void refreshToken() {
+    public void refreshToken() {
         String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         if (!currentToken.isEmpty()) {
             Call<TokenRefreshModel> call = gateApi.refreshToken("Bearer " + currentToken);
