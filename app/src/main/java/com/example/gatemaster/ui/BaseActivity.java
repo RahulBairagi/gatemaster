@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,6 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -138,11 +142,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         spnrarrw = (ImageView) findViewById(R.id.gatespnrarrw);
         locationicon = (ImageView) findViewById(R.id.gatespnricon);
 
-        String[] spinnerdata = {"Gate 01", "Gate 02", "Gate 03", "Gate 04", "Gate 05", "Gate 06"};
+        Map<String, String> locationGateIdMap = databaseConnection.getGateLocationMap();
+        List<String> locations = new ArrayList<>(locationGateIdMap.keySet());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item_spnr, spinnerdata);
+// Create and set the adapter for the spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spnr, locations);
         adapter.setDropDownViewResource(R.layout.item_spnr);
         gateSpinner.setAdapter(adapter);
+
+        gateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedLocation = locations.get(position);
+                String selectedGateId = locationGateIdMap.get(selectedLocation);
+
+                Log.d(TAG, "Selected Location: " + selectedLocation);
+                Log.d(TAG, "Corresponding Gate ID: " + selectedGateId);
+                sharedPref.save("GATEID", selectedGateId);
+
+                // Use selectedGateId as needed
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle the case when nothing is selected (if needed)
+            }
+        });
 
         baseUrl = sharedPref.getString("baseUrl");
         if (baseUrl.length() > 0) {
@@ -162,6 +187,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             }
         });
+
+
         create(savedInstanceState);
     }
 
@@ -236,7 +263,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Constant.Exp_Time = response.body().getResponseData().getExpiresIn() / 3600;
                     int expiresIn = response.body().getResponseData().getExpiresIn(); // in seconds
                     scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
-
                     EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
                     active = 0;
@@ -407,15 +433,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                     // Check the statusCode from the response
                     if ("200".equals(data.getStatusCode())) {
-//                        databaseConnection.deleteTable("GateEntries");
-//                        databaseConnection.insertGateEntries(data);
-                        Log.d("getActiveentries==========", data.toString());
-//                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", true));
+                       databaseConnection.deleteTable("Gates");
+                    databaseConnection.insertGate(data);
+                        Log.d("getallgates==========", data.toString());
                         hideProgress();
+                        EventBus.getDefault().post(new BusEventDefault("All Gates", true));
+
                     } else {
                         // Handle unexpected status code (e.g., not 200)
                         EventBus.getDefault().post(new BusEventDefault("All Gates", false));
-                        Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
+                        Log.e("getallgates", "Unexpected status code: " + data.getStatusCode());
                     }
                 } else {
                     // Handle error case when response is not successful
@@ -425,7 +452,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         EventBus.getDefault().post(new BusEventDefault("All Gates", false,e.getMessage().toString()));
                         throw new RuntimeException(e);
                     }
-                    Log.e("getActiveentries", "Response not successful or body is null");
+                    Log.e("getallgates", "Response not successful or body is null");
                 }
             }
 

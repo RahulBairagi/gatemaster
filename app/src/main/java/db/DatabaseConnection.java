@@ -13,13 +13,17 @@ import com.example.gatemaster.ui.HomeActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import busevent.BusEventDefault;
 import datamodel.CustomerInvoiceDataModel;
 import datamodel.InvoiceDataModel;
 import model.ActiveEntriesResponse;
 import model.GateEntry;
+import model.GateResponseData;
+import model.GetGatesResponse;
 import model.ResponseData;
 
 public class DatabaseConnection extends SQLiteOpenHelper {
@@ -60,6 +64,8 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_GATE_ENTRIES = "CREATE TABLE IF NOT EXISTS GateEntries (vehicle_registration_number TEXT, visitor_name TEXT, visitor_mobile TEXT, visitor_address TEXT, purpose TEXT, entry_time TEXT, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT, GateReqID TEXT);";
 
+    private static final String CREATE_TABLE_Gates = "CREATE TABLE IF NOT EXISTS Gates (id INTEGER PRIMARY KEY, gate_id TEXT, location TEXT, entry_type TEXT, status INTEGER, client_id INTEGER, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT);";
+
 
 
 
@@ -75,6 +81,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CUSTOMERINVOICEDETAIL);
         db.execSQL(CREATE_TABLE_SIGNATUREDETAIL);
         db.execSQL(CREATE_TABLE_GATE_ENTRIES);
+        db.execSQL(CREATE_TABLE_Gates);
 
 
           }
@@ -86,7 +93,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_CUSTOMERINVOICEDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_SIGNATUREDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_GATE_ENTRIES);
-
+        db.execSQL("drop table if exists"+" "+CREATE_TABLE_Gates);
         onCreate(db);
     }
 
@@ -147,84 +154,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         sq = this.getReadableDatabase();
         Cursor res = sq.rawQuery("select  customerName,transactionId,customerAcct, signatureNotRequired from InvoiceDetail", null);
         return res;
-    }
-
-    public void insertCustomerInvoiceDetails(CustomerInvoiceDataModel customerInvoiceDataModel){
-        sq = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        try{
-            contentValues.put("terminal",customerInvoiceDataModel.getTerminal());
-            contentValues.put("customerAccount",customerInvoiceDataModel.getCustaccount());
-            contentValues.put("transactionId",customerInvoiceDataModel.getTransactionid());
-            contentValues.put("customerName",customerInvoiceDataModel.getCustname());
-            contentValues.put("signature",customerInvoiceDataModel.getSignature());
-            contentValues.put("invoiceURL",customerInvoiceDataModel.getInvoiceURL());
-            long i= sq.insert("CustomerInvoiceDetail",null,contentValues);
-            Log.d(TAG, "value: ex =============>" + i);
-        }catch (Exception e){
-            Log.d(TAG, "InsertCustomerInvoiceDetail: ex =============>" + e.getMessage());
-        }
-    }
-    public Cursor getCustomerInvoiceUrlDetails(){
-        sq = this.getReadableDatabase();
-        Cursor res = sq.rawQuery("select invoiceURL  from CustomerInvoiceDetail", null);
-        return res;
-    }
-    public void insertSignatureDetailsGet(String invoiceID,String custAcct,String status, String id,String post,String signBaseStr){
-        sq = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        try{
-            contentValues.put("invoiceID",invoiceID);
-            contentValues.put("custAcct",custAcct);
-            contentValues.put("signature",signBaseStr);
-            contentValues.put("id",id);
-            contentValues.put("post",post);
-            contentValues.put("status",status);
-            long i = sq.insert("SignatureDetail",null,contentValues);
-            Log.d(TAG, "value: ex =============>" + i);
-        }catch (Exception e){
-            Log.d(TAG,"InsertSignatureDetail: ex =============>"+e.getMessage());
-
-        }
-    }
-
-    public void updateCustomerSign(byte[] byteArraySign,String invoiceID,String custAcct) {
-        sq = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("signature", byteArraySign);
-        contentValues.put("invoiceID",invoiceID);
-        contentValues.put("custAcct",custAcct);
-        contentValues.put("post","0");
-//        sq.update("SignatureDetail", contentValues, "id=?", new String[]{HomeActivity.SIGNATUREID});
-    }
-   public Cursor getSignatureDetails(){
-        sq = this.getReadableDatabase();
-        Cursor res = sq.rawQuery("select invoiceID from SignatureDetail",null);
-        return res;
-   }
-
-    public Cursor getCustomerSignatureDetail() {
-        sq = this.getReadableDatabase();
-        Cursor res = sq.rawQuery(" select * from SignatureDetail where post=0", null);
-        return res;
-
-    }
-
-    public void updatePost(String post) {
-        sq = this.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("post", post);
-//        sq.update("SignatureDetail", contentValues, "id= ?", new String[]{HomeActivity.SIGNATUREID});
-    }
-
-    public void deleteBlankSign() {
-        sq = this.getWritableDatabase();
-        sq.execSQL("DELETE from SignatureDetail where  signature='' ");
-    }
-    public void deletePost(){
-        sq = this.getWritableDatabase();
-        sq.execSQL("DELETE from SignatureDetail where post='1'");
     }
 
 
@@ -333,6 +262,70 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
         Log.d(TAG, "All tables cleared");
     }
+
+
+    public void insertGate(GetGatesResponse data) {
+        try {
+            sq = this.getWritableDatabase();
+            if (data != null && data.getResponseData() != null) {
+                ContentValues contentValues = new ContentValues();
+                for (GateResponseData entry : data.getResponseData()) {
+                    contentValues.clear();
+
+                    contentValues.put("id", entry.getId());
+                    contentValues.put("gate_id", entry.getGateId());
+                    contentValues.put("location", entry.getLocation());
+                    contentValues.put("entry_type", entry.getEntryType());
+                    contentValues.put("status", entry.getStatus());
+                    contentValues.put("client_id", entry.getClientId());
+                    contentValues.put("created_type", entry.getCreatedType());
+                    contentValues.put("modified_type", entry.getModifiedType());
+                    contentValues.put("created_at", entry.getCreatedAt());
+                    contentValues.put("updated_at", entry.getUpdatedAt());
+
+                    long result = sq.insert("Gates", null, contentValues);
+                    Log.d(TAG, "Gates: Insert result =============> " + result);
+                }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Gates: Exception =============> " + e.getMessage());
+        } finally {
+            if (sq != null) {
+                sq.close();
+            }
+        }
+    }
+
+
+    public Map<String, String> getGateLocationMap() {
+        Map<String, String> locationGateIdMap = new HashMap<>();
+        SQLiteDatabase sq = null;
+        Cursor cursor = null;
+        try {
+            sq = this.getReadableDatabase();
+            String query = "SELECT location, gate_id FROM Gates";
+            cursor = sq.rawQuery(query, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    @SuppressLint("Range") String location = cursor.getString(cursor.getColumnIndex("location"));
+                    @SuppressLint("Range") String gateId = cursor.getString(cursor.getColumnIndex("gate_id"));
+                    locationGateIdMap.put(location, gateId);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "getGateLocationMap: Exception =============> " + e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (sq != null) {
+                sq.close();
+            }
+        }
+        return locationGateIdMap;
+    }
+
 
 
 }

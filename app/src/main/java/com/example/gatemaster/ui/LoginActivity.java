@@ -15,6 +15,7 @@ import com.mobile.gatemaster.R;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import busevent.BusEventDefault;
 import busevent.LoginBusEvent;
 import db.DatabaseConnection;
 import utils.ProgressWheel;
@@ -170,12 +171,24 @@ public class LoginActivity extends BaseActivity {
 
     }
 
+    public void onEvent(BusEventDefault event) {
+        if (event.getMessage().equalsIgnoreCase("All Gates")) {
+            if (event.getSuccess()) {
+                hideProgress();
+                Util.pushNext(this, HomeActivity.class);
+            }
+        }
+    }
+
     @Subscribe
     public void onEvent(LoginBusEvent loginBusEvent) {
         hideProgress();
         if (loginBusEvent.getStrEvent() == "YES") {
             if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK")) {
-                Util.pushNext(this, HomeActivity.class);
+
+                getallgates();
+               // Util.pushNext(this, HomeActivity.class);
+
             } else {
                 Util.showOKAlert(this,loginBusEvent.getStatus());
             }
