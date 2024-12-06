@@ -237,10 +237,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                     int expiresIn = response.body().getResponseData().getExpiresIn(); // in seconds
                     scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
 
-                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getMessage()));
+                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.body().getTitle()));
                 } else {
                     active = 0;
-                    EventBus.getDefault().post(new LoginBusEvent("YES", active, response.message()));
+                    try {
+                        EventBus.getDefault().post(new LoginBusEvent("YES", active, getErrorFromResponse(response.errorBody().string())));
+                    } catch (IOException e) {
+                        EventBus.getDefault().post(new LoginBusEvent("YES", active,  e.getMessage().toString()));
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -250,9 +255,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 active = 0;
                 EventBus.getDefault().post(new LoginBusEvent("NO", active, t.getMessage()));
             }
-
-            ;
-
         });
     }
 
@@ -334,14 +336,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                         EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), false));
                     }
                 } else {
-                    String message = "";
                     try {
-                        message = getErrorFromResponse(response.errorBody().string());
+                        EventBus.getDefault().post(new BusEventDefault( getErrorFromResponse(response.errorBody().string()), false));
                     } catch (IOException e) {
-                        message = e.getMessage().toString();
+                        EventBus.getDefault().post(new BusEventDefault(e.getMessage().toString(), false));
                         throw new RuntimeException(e);
-                    } finally {
-                        EventBus.getDefault().post(new BusEventDefault(message, false));
                     }
                 }
             }
@@ -415,12 +414,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                         hideProgress();
                     } else {
                         // Handle unexpected status code (e.g., not 200)
-                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                        EventBus.getDefault().post(new BusEventDefault("All Gates", false));
                         Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
                     }
                 } else {
                     // Handle error case when response is not successful
-                    EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                    try {
+                        EventBus.getDefault().post(new BusEventDefault("All Gates", false,getErrorFromResponse(response.errorBody().string())));
+                    } catch (IOException e) {
+                        EventBus.getDefault().post(new BusEventDefault("All Gates", false,e.getMessage().toString()));
+                        throw new RuntimeException(e);
+                    }
                     Log.e("getActiveentries", "Response not successful or body is null");
                 }
             }
@@ -429,7 +433,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onFailure(Call<GetGatesResponse> call, Throwable t) {
                 // Handle failure
                 Log.e("getActiveentries", "Request failed: " + t.getMessage());
-                EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                EventBus.getDefault().post(new BusEventDefault("All Gates", false));
             }
         });
 
@@ -450,7 +454,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                         EventBus.getDefault().post(new VisiteeDetails("", "", false));
                     }
                 } else {
-                    EventBus.getDefault().post(new VisiteeDetails("", "", false));
+                    try {
+                        EventBus.getDefault().post(new VisiteeDetails("", getErrorFromResponse(response.errorBody().string()), false));
+                    } catch (IOException e) {
+                        EventBus.getDefault().post(new VisiteeDetails("", e.getMessage().toString(), false));
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -481,7 +490,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                         hideProgress();
                     } else {
                         // Handle unexpected status code (e.g., not 200)
-                        EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false));
+                        try {
+                            EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false,getErrorFromResponse(response.errorBody().string())));
+                        } catch (IOException e) {
+                            EventBus.getDefault().post(new BusEventDefault("ActiveEntries", false,getErrorFromResponse(e.getMessage().toString())));
+                            throw new RuntimeException(e);
+                        }
                         Log.e("getActiveentries", "Unexpected status code: " + data.getStatusCode());
                     }
                 } else {
@@ -517,6 +531,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                     sharedPref.saveBool("isloggedin", false);
                     Util.pushNext(BaseActivity.this, LoginActivity.class);
                 } else {
+                    try {
+                        Util.showOKAlert(BaseActivity.this,getErrorFromResponse(response.errorBody().string()));
+                    } catch (IOException e) {
+                        Util.showOKAlert(BaseActivity.this,"LogOut Failed");
+                        throw new RuntimeException(e);
+                    }
                     // Handle logout failure
                     Log.d("Logout", "Logout failed: " + response.code());
                 }
@@ -525,6 +545,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LogoutResponse> call, Throwable t) {
                 // Handle request failure
+                Util.showOKAlert(BaseActivity.this,"LogOut Failed");
                 Log.d("Logout", "Logout error: " + t.getMessage());
             }
         });
@@ -612,9 +633,15 @@ public abstract class BaseActivity extends AppCompatActivity {
                         sharedPref.saveBool("isloggedin", true);
                         sharedPref.save("lastlogin", Util.getcurrenttime());
                         scheduleTokenRefresh(expiresIn - 120); // Refresh 2 minutes before expiration
-
+                        EventBus.getDefault().post(new LoginBusEvent("YES", 1, "Token refresh successfull"));
                         Log.d("TokenRefresh", "Token refreshed successfully");
                     } else {
+                        try {
+                            EventBus.getDefault().post(new LoginBusEvent("NO", 0, getErrorFromResponse(response.errorBody().string())));
+                        } catch (IOException e) {
+                            EventBus.getDefault().post(new LoginBusEvent("NO", 0, e.getMessage().toString()));
+                            throw new RuntimeException(e);
+                        }
                         Log.e("TokenRefresh", "Token refresh failed: " + response.message());
                     }
                 }
@@ -622,6 +649,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<TokenRefreshModel> call, Throwable t) {
                     Log.e("TokenRefresh", "Token refresh failed", t);
+                    EventBus.getDefault().post(new LoginBusEvent("NO", 0, t.getMessage()));
                 }
             });
         }

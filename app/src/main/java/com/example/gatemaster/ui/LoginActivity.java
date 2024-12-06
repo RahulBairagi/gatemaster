@@ -60,7 +60,6 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (validate()) {
                     loginBtnCLick();
-//                    Util.showOKAlert(LoginActivity.this,Util.getMacAddress(LoginActivity.this));
                 }
             }
         });
@@ -176,13 +175,12 @@ public class LoginActivity extends BaseActivity {
         hideProgress();
         if (loginBusEvent.getStrEvent() == "YES") {
             if (loginBusEvent.getActive() == 1 && loginBusEvent.getStatus().equalsIgnoreCase("OK")) {
-
                 Util.pushNext(this, HomeActivity.class);
             } else {
-                Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
+                Util.showOKAlert(this,loginBusEvent.getStatus());
             }
         } else {
-            Toast.makeText(this, loginBusEvent.getStatus(), Toast.LENGTH_SHORT).show();
+            Util.showOKAlert(this,loginBusEvent.getStatus());
         }
     }
 

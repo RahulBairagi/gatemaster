@@ -2,8 +2,12 @@ package utils;
 
 import static android.content.Context.WIFI_SERVICE;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +17,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -114,38 +121,19 @@ public class Util {
         }
     }
 
-    public static Boolean checkWifiStatePermission(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_WIFI_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-            // Permission is granted
-            return true;
-        } else {
-            // Request the permission
-            ActivityCompat.requestPermissions(
-                    (Activity) context,
-                    new String[]{Manifest.permission.ACCESS_WIFI_STATE},
-                    1
-            );
-            return false;
-        }
-    }
-
+    @SuppressLint("HardwareIds")
     public static String getMacAddress(Context context) {
         String mac = Constant.DEF_MAC;
-        if (checkWifiStatePermission(context)){
             try {
-                WifiManager wifiMgr = (WifiManager) context.getSystemService(WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-                mac = wifiInfo.getMacAddress();
+                mac =  Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                Log.d("Utils", "getMacAddress: ------> "+mac);
             } catch (Exception e) {
                 e.printStackTrace();
             }finally {
                 return mac; // Default MAC address when access is restricted
             }
-        }else{
-            return mac;
         }
-    }
+
 
     public static long getDifferenceInHours(String startDateString, String endDateString, String dateFormat) {
         try {
