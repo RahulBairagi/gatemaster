@@ -24,7 +24,7 @@ import com.Retail3xpress.GateControlX.ui.BaseActivity;
 import com.Retail3xpress.GateControlX.ui.HomeActivity;
 import com.Retail3xpress.GateControlX.ui.VisitorCheckInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
