@@ -1,4 +1,4 @@
-package com.example.gatemaster.ui;
+package com.Retail3xpress.GateControlX.ui;
 
 import android.os.Bundle;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
 
 import utils.Util;
 

@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.mobile.gatemaster'
+    namespace 'com.Retail3xpress.GateControlX'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.mobile.gatemaster"
+        applicationId "com.Retail3xpress.GateControlX"
         minSdk 28
         targetSdk 34
         versionCode 1

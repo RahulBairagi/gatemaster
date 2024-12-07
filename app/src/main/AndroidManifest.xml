@@ -12,7 +12,8 @@
     <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS"
         tools:ignore="ProtectedPermissions" />
 
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
@@ -30,42 +31,39 @@
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="barcode_ui" />
-
-
         <!--<activity
-            android:name="com.example.gatemaster.ui.SplashActivity"
+            android:name="com.Retail3xpress.GateControlX.ui.SplashActivity"
             android:exported="true"
            >
         </activity>-->
         <activity
-            android:name="com.example.gatemaster.ui.LoginActivity"
+            android:name="com.Retail3xpress.GateControlX.ui.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.gatemaster.ui.HomeActivity"
+            android:name="com.Retail3xpress.GateControlX.ui.HomeActivity"
             android:exported="true">
 
         </activity>
         <activity
-            android:name="com.example.gatemaster.ui.ForgotPasswordActivity"
-            android:exported="true">
-
-        </activity>
-
-        <activity
-            android:name="com.example.gatemaster.ui.VisitorCheckInActivity"
+            android:name="com.Retail3xpress.GateControlX.ui.ForgotPasswordActivity"
             android:exported="true">
 
         </activity>
 
         <activity
-            android:name="com.example.gatemaster.ui.ProfileActivity"
+            android:name="com.Retail3xpress.GateControlX.ui.VisitorCheckInActivity"
+            android:exported="true">
+
+        </activity>
+
+        <activity
+            android:name="com.Retail3xpress.GateControlX.ui.ProfileActivity"
             android:exported="true">
 
         </activity>

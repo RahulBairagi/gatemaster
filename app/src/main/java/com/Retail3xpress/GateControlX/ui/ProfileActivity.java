@@ -1,4 +1,4 @@
-package com.example.gatemaster.ui;
+package com.Retail3xpress.GateControlX.ui;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
 
 import org.greenrobot.eventbus.Subscribe;
 

@@ -1,4 +1,4 @@
-package com.example.gatemaster.ui;
+package com.Retail3xpress.GateControlX.ui;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
@@ -21,7 +21,7 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanner;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions;
 import com.google.mlkit.vision.codescanner.GmsBarcodeScanning;
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
 
 import org.greenrobot.eventbus.Subscribe;
 
