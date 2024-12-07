@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.gatemaster.ui.HomeActivity;
+import com.Retail3xpress.GateControlX.ui.HomeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -20,9 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.gatemaster.ui.BaseActivity;
-import com.example.gatemaster.ui.HomeActivity;
-import com.example.gatemaster.ui.VisitorCheckInActivity;
+import com.Retail3xpress.GateControlX.ui.BaseActivity;
+import com.Retail3xpress.GateControlX.ui.HomeActivity;
+import com.Retail3xpress.GateControlX.ui.VisitorCheckInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mobile.gatemaster.R;
 

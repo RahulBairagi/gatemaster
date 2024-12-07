@@ -1,6 +1,6 @@
 package di;
 
-import com.example.gatemaster.ui.BaseActivity;
+import com.Retail3xpress.GateControlX.ui.BaseActivity;
 
 import app.GateMasterApplication;
 
