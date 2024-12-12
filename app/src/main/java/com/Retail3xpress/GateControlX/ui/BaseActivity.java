@@ -41,8 +41,10 @@ import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
 import datamodel.PostCheckOut;
+import datamodel.PostDeviceToken;
 import datamodel.ResponseCheckIn;
 import datamodel.ResponseCheckOut;
+import datamodel.ResponseDeviceToken;
 import datamodel.ResponseVisiteeDetails;
 import datamodel.TokenRefreshModel;
 import datamodel.UserDetailRequest;
@@ -85,6 +87,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public LayoutInflater getInflator() {
         return inflator;
     }
+
+
+
 
 
     protected View inflateView(int layoutId, String title, boolean isToolbar) {
@@ -350,6 +355,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         postCheckIn.setVehicleRegistrationNumber(vehiclenum);
         postCheckIn.setVisitorType(visittype);
         postCheckIn.setVisitorMobile(mob);
+        postCheckIn.setGuardId(sharedPref.getString("userid"));
 
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         Call<ResponseCheckIn> call = gateApi.postcheckin(token, postCheckIn);
@@ -359,15 +365,15 @@ public abstract class BaseActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseCheckIn> call, Response<ResponseCheckIn> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getTitle().equalsIgnoreCase("Created")) {
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), true));
+                        EventBus.getDefault().post(new BusEventDefault("PostCheckin", true,response.body().getMessage()));
                     } else {
-                        EventBus.getDefault().post(new BusEventDefault(response.body().getMessage(), false));
+                        EventBus.getDefault().post(new BusEventDefault("PostCheckin", false,response.body().getMessage()));
                     }
                 } else {
                     try {
-                        EventBus.getDefault().post(new BusEventDefault( getErrorFromResponse(response.errorBody().string()), false));
+                        EventBus.getDefault().post(new BusEventDefault("PostCheckin",  false,getErrorFromResponse(response.errorBody().string())));
                     } catch (IOException e) {
-                        EventBus.getDefault().post(new BusEventDefault(e.getMessage().toString(), false));
+                        EventBus.getDefault().post(new BusEventDefault("PostCheckin", false,e.getMessage().toString()));
                         throw new RuntimeException(e);
                     }
                 }
@@ -375,7 +381,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseCheckIn> call, Throwable t) {
-                EventBus.getDefault().post(new BusEventDefault(t.getMessage(), false));
+                EventBus.getDefault().post(new BusEventDefault("PostCheckin", false, t.getMessage()));
             }
         });
     }
@@ -461,7 +467,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<GetGatesResponse> call, Throwable t) {
                 // Handle failure
-                Log.e("getActiveentries", "Request failed: " + t.getMessage());
+                Log.e("getAllgates", "Request failed: " + t.getMessage());
                 EventBus.getDefault().post(new BusEventDefault("All Gates", false));
             }
         });
@@ -543,9 +549,40 @@ public abstract class BaseActivity extends AppCompatActivity {
         });
     }
 
+    public void updatefcmtoken(){
+        String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        PostDeviceToken postDeviceToken = new PostDeviceToken();
+        postDeviceToken.setDeviceToken(sharedPref.getString("fcmtoken"));
+
+        Call<ResponseDeviceToken> call = gateApi.postdevicetoken(token, postDeviceToken);
+
+        call.enqueue(new Callback<ResponseDeviceToken>() {
+            @Override
+            public void onResponse(Call<ResponseDeviceToken> call, Response<ResponseDeviceToken> response) {
+                if (response.isSuccessful()){
+                    Log.d(TAG, "onResponse: fcm token api --->"+response.body().getMessage());
+                }else{
+                    try {
+                        Log.d(TAG, "onResponse: fcm token api --->"+response.errorBody().string());
+                    } catch (IOException e) {
+                        Log.d(TAG, "onResponse: fcm token api --->"+e.getMessage().toString());
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseDeviceToken> call, Throwable t) {
+                Log.d(TAG, "onResponse: fcm token api --->"+t.getMessage().toString());
+            }
+        });
+
+    }
+
+
     public void logoutUser() {
         String token = "Bearer " + sharedPref.getString(Constant.PREF_AUTH_TOKEN);
-        Call<LogoutResponse> call = gateApi.logout("Bearer " + token);
+        Call<LogoutResponse> call = gateApi.logout(token);
 
         call.enqueue(new Callback<LogoutResponse>() {
             @Override
@@ -686,10 +723,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void getNotification() {
-        showProgress();
         String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
         if (!currentToken.isEmpty()) {
             Call<NotificationResponse> call = gateApi.getNotification("Bearer " + currentToken);
@@ -701,7 +735,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                         databaseConnection.deleteTable("Notifications");
                         databaseConnection.insertNotification(response.body());
                         Log.d("NotificationResponse==========", response.body().toString());
-                        EventBus.getDefault().post(new NotificationBusEvent("YES", response.message()));
+                        EventBus.getDefault().post(new NotificationBusEvent("YES", response.body().getTitle()));
                     } else {
                         try {
                             EventBus.getDefault().post(new NotificationBusEvent("NO", getErrorFromResponse(response.errorBody().string())));

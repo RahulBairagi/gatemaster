@@ -16,6 +16,7 @@ import javax.annotation.processing.Generated;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "gate_id",
+        "guard_id",
         "vehicle_registration_number",
         "visitor_name",
         "visitor_mobile",
@@ -40,6 +41,18 @@ public class PostCheckIn {
     private String visitorType;
     @JsonProperty("purpose")
     private String purpose;
+
+    public String getGuardId() {
+        return guardId;
+    }
+
+    public void setGuardId(String guardId) {
+        this.guardId = guardId;
+    }
+
+    @JsonProperty("guard_id")
+    private String guardId;
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 

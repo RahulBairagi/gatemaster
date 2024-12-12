@@ -5,18 +5,25 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.Retail3xpress.GateControlX.R;
+import com.Retail3xpress.GateControlX.ui.BaseActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 import adapter.NotificationAdapter;
+import busevent.NotificationBusEvent;
 import db.DatabaseConnection;
 import model.NotificationModel;
+import utils.Util;
 
 
 /**
@@ -36,7 +43,9 @@ public class ThirdFragment extends Fragment {
     private String mParam2;
 
     private DatabaseConnection databaseConnection;
-
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private BaseActivity baseActivity;
 
     public ThirdFragment() {
         // Required empty public constructor
@@ -69,20 +78,64 @@ public class ThirdFragment extends Fragment {
         }
     }
 
+    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
+    public void onEvent(NotificationBusEvent notibusevent) {
+        swipeRefreshLayout.setRefreshing(false);
+        if (notibusevent.getStrEvent() == "YES") {
+            setlist();
+        }else{
+            Util.showToast(getActivity(),"No notifications to show.");
+        }
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.notification, container, false);
         databaseConnection = new DatabaseConnection(getContext());
-        RecyclerView recyclerView = view.findViewById(R.id.rv_notifications);
+        recyclerView = view.findViewById(R.id.rv_notifications);
+        swipeRefreshLayout = view.findViewById(R.id.notirefresh);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        setlist();
+
+        baseActivity = (BaseActivity) this.getActivity();
+        assert baseActivity != null;
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (getActivity() != null) {
+                    if (Util.isNetworkAvailable(getActivity())) {
+                        baseActivity.getNotification();
+                    }
+                }
+            }
+        });
         // Fetch data and set adapter
-        List<NotificationModel> notifications = databaseConnection.getNotifications();
-        NotificationAdapter adapter = new NotificationAdapter(notifications);
-        recyclerView.setAdapter(adapter);
 
         return  view;
     }
+
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    public void setlist(){
+        List<NotificationModel> notifications = databaseConnection.getNotifications();
+        NotificationAdapter adapter = new NotificationAdapter(notifications);
+        recyclerView.setAdapter(adapter);
+    }
+
 }

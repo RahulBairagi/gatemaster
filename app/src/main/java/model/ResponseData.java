@@ -1,147 +1,279 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ResponseData {
 
-    @JsonProperty("id")
-    private int id;
 
+    @JsonProperty("id")
+    private Integer id;
     @JsonProperty("gate_entries_request_id")
     private String gateEntriesRequestId;
-
     @JsonProperty("client_id")
-    private int clientId;
-
+    private Integer clientId;
+    @JsonProperty("guard_id")
+    private Integer guardId;
     @JsonProperty("gate_id")
-    private int gateId;
-
+    private Integer gateId;
     @JsonProperty("vehicle_registration_number")
     private String vehicleRegistrationNumber;
-
     @JsonProperty("visitor_name")
     private String visitorName;
-
     @JsonProperty("visitor_mobile")
     private String visitorMobile;
-
     @JsonProperty("visitor_address")
     private String visitorAddress;
-
     @JsonProperty("visitor_type")
-    private int visitorType;
-
+    private Integer visitorType;
     @JsonProperty("purpose")
     private String purpose;
-
     @JsonProperty("society_id")
-    private Integer societyId;
-
+    private Object societyId;
     @JsonProperty("flat_id")
-    private Integer flatId;
-
+    private Object flatId;
     @JsonProperty("entry_time")
     private String entryTime;
-
     @JsonProperty("entry_by")
-    private int entryBy;
-
+    private Integer entryBy;
     @JsonProperty("exit_time")
-    private String exitTime;
-
+    private Object exitTime;
     @JsonProperty("exit_by")
-    private Integer exitBy;
-
+    private Object exitBy;
     @JsonProperty("created_type")
     private String createdType;
-
     @JsonProperty("modified_type")
     private String modifiedType;
+    @JsonProperty("created_at")
+    private String createdAt;
+    @JsonProperty("updated_at")
+    private String updatedAt;
+    @JsonIgnore
+    private Map<String, Object> additionalProperties = new LinkedHashMap<String, Object>();
 
-    public int getId() {
+    @JsonProperty("id")
+    public Integer getId() {
         return id;
     }
 
+    @JsonProperty("id")
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @JsonProperty("gate_entries_request_id")
     public String getGateEntriesRequestId() {
         return gateEntriesRequestId;
     }
 
-    public int getClientId() {
+    @JsonProperty("gate_entries_request_id")
+    public void setGateEntriesRequestId(String gateEntriesRequestId) {
+        this.gateEntriesRequestId = gateEntriesRequestId;
+    }
+
+    @JsonProperty("client_id")
+    public Integer getClientId() {
         return clientId;
     }
 
-    public int getGateId() {
+    @JsonProperty("client_id")
+    public void setClientId(Integer clientId) {
+        this.clientId = clientId;
+    }
+
+    @JsonProperty("guard_id")
+    public Integer getGuardId() {
+        return guardId;
+    }
+
+    @JsonProperty("guard_id")
+    public void setGuardId(Integer guardId) {
+        this.guardId = guardId;
+    }
+
+    @JsonProperty("gate_id")
+    public Integer getGateId() {
         return gateId;
     }
 
+    @JsonProperty("gate_id")
+    public void setGateId(Integer gateId) {
+        this.gateId = gateId;
+    }
+
+    @JsonProperty("vehicle_registration_number")
     public String getVehicleRegistrationNumber() {
         return vehicleRegistrationNumber;
     }
 
+    @JsonProperty("vehicle_registration_number")
+    public void setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+        this.vehicleRegistrationNumber = vehicleRegistrationNumber;
+    }
+
+    @JsonProperty("visitor_name")
     public String getVisitorName() {
         return visitorName;
     }
 
+    @JsonProperty("visitor_name")
+    public void setVisitorName(String visitorName) {
+        this.visitorName = visitorName;
+    }
+
+    @JsonProperty("visitor_mobile")
     public String getVisitorMobile() {
         return visitorMobile;
     }
 
+    @JsonProperty("visitor_mobile")
+    public void setVisitorMobile(String visitorMobile) {
+        this.visitorMobile = visitorMobile;
+    }
+
+    @JsonProperty("visitor_address")
     public String getVisitorAddress() {
         return visitorAddress;
     }
 
-    public int getVisitorType() {
+    @JsonProperty("visitor_address")
+    public void setVisitorAddress(String visitorAddress) {
+        this.visitorAddress = visitorAddress;
+    }
+
+    @JsonProperty("visitor_type")
+    public Integer getVisitorType() {
         return visitorType;
     }
 
+    @JsonProperty("visitor_type")
+    public void setVisitorType(Integer visitorType) {
+        this.visitorType = visitorType;
+    }
+
+    @JsonProperty("purpose")
     public String getPurpose() {
         return purpose;
     }
 
-    public Integer getSocietyId() {
+    @JsonProperty("purpose")
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
+    }
+
+    @JsonProperty("society_id")
+    public Object getSocietyId() {
         return societyId;
     }
 
-    public Integer getFlatId() {
+    @JsonProperty("society_id")
+    public void setSocietyId(Object societyId) {
+        this.societyId = societyId;
+    }
+
+    @JsonProperty("flat_id")
+    public Object getFlatId() {
         return flatId;
     }
 
+    @JsonProperty("flat_id")
+    public void setFlatId(Object flatId) {
+        this.flatId = flatId;
+    }
+
+    @JsonProperty("entry_time")
     public String getEntryTime() {
         return entryTime;
     }
 
-    public int getEntryBy() {
+    @JsonProperty("entry_time")
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    @JsonProperty("entry_by")
+    public Integer getEntryBy() {
         return entryBy;
     }
 
-    public String getExitTime() {
+    @JsonProperty("entry_by")
+    public void setEntryBy(Integer entryBy) {
+        this.entryBy = entryBy;
+    }
+
+    @JsonProperty("exit_time")
+    public Object getExitTime() {
         return exitTime;
     }
 
-    public Integer getExitBy() {
+    @JsonProperty("exit_time")
+    public void setExitTime(Object exitTime) {
+        this.exitTime = exitTime;
+    }
+
+    @JsonProperty("exit_by")
+    public Object getExitBy() {
         return exitBy;
     }
 
+    @JsonProperty("exit_by")
+    public void setExitBy(Object exitBy) {
+        this.exitBy = exitBy;
+    }
+
+    @JsonProperty("created_type")
     public String getCreatedType() {
         return createdType;
     }
 
+    @JsonProperty("created_type")
+    public void setCreatedType(String createdType) {
+        this.createdType = createdType;
+    }
+
+    @JsonProperty("modified_type")
     public String getModifiedType() {
         return modifiedType;
     }
 
+    @JsonProperty("modified_type")
+    public void setModifiedType(String modifiedType) {
+        this.modifiedType = modifiedType;
+    }
+
+    @JsonProperty("created_at")
     public String getCreatedAt() {
         return createdAt;
     }
 
+    @JsonProperty("created_at")
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @JsonProperty("updated_at")
     public String getUpdatedAt() {
         return updatedAt;
     }
 
-    @JsonProperty("created_at")
-    private String createdAt;
-
     @JsonProperty("updated_at")
-    private String updatedAt;
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    @JsonAnyGetter
+    public Map<String, Object> getAdditionalProperties() {
+        return this.additionalProperties;
+    }
+
+    @JsonAnySetter
+    public void setAdditionalProperty(String name, Object value) {
+        this.additionalProperties.put(name, value);
+    }
 
 }

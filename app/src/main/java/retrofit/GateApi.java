@@ -8,8 +8,10 @@ import datamodel.InvoiceDetailRequest;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
 import datamodel.PostCheckOut;
+import datamodel.PostDeviceToken;
 import datamodel.ResponseCheckIn;
 import datamodel.ResponseCheckOut;
+import datamodel.ResponseDeviceToken;
 import datamodel.ResponseVisiteeDetails;
 import datamodel.SignatureDataModel;
 import datamodel.SignatureDetailRequest;
@@ -38,6 +40,9 @@ public interface GateApi {
 
     @POST("guard/checkin")
     Call<ResponseCheckIn> postcheckin(@Header("Authorization") String authToken, @Body PostCheckIn jsonData);
+
+    @POST("guard/device_token")
+    Call<ResponseDeviceToken> postdevicetoken(@Header("Authorization") String authToken, @Body PostDeviceToken jsonData);
 
     @GET("guard/getactiveentries")
     Call<ActiveEntriesResponse> getActiveEntries(@Header("Authorization") String authToken);

@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.Retail3xpress.GateControlX.R;
 
@@ -173,7 +172,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void onEvent(BusEventDefault event) {
-        if (event.getMessage().equalsIgnoreCase("All Gates")) {
+        if (event.getEvent().equalsIgnoreCase("All Gates")) {
             if (event.getSuccess()) {
                 hideProgress();
                 Util.pushNext(this, HomeActivity.class);

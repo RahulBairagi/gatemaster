@@ -16,7 +16,6 @@ import javax.annotation.processing.Generated;
         "employee_id",
         "employee_pin",
         "device_id",
-        "device_token",
         "device_type"
 })
 @Generated("jsonschema2pojo")
@@ -28,8 +27,6 @@ public class UserDetailRequest {
     private String employeePin;
     @JsonProperty("device_id")
     private String deviceId;
-    @JsonProperty("device_token")
-    private String deviceToken;
     @JsonProperty("device_type")
     private String deviceType;
     @JsonIgnore
@@ -63,16 +60,6 @@ public class UserDetailRequest {
     @JsonProperty("device_id")
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
-    }
-
-    @JsonProperty("device_token")
-    public String getDeviceToken() {
-        return deviceToken;
-    }
-
-    @JsonProperty("device_token")
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
     }
 
     @JsonProperty("device_type")

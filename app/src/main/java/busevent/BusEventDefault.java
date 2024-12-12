@@ -2,19 +2,19 @@ package busevent;
 
 public  class BusEventDefault {
 
-    String message;
+    String event;
     Boolean isSuccess;
-    String error;
+    String message;
 
-    public BusEventDefault(String message, Boolean isSuccess) {
-        this.message = message;
+    public BusEventDefault(String event, Boolean isSuccess) {
+        this.event = event;
         this.isSuccess = isSuccess;
     }
 
-    public BusEventDefault(String message, Boolean isSuccess, String error) {
-        this.message = message;
+    public BusEventDefault(String event, Boolean isSuccess, String message) {
+        this.event = event;
         this.isSuccess = isSuccess;
-        this.error = error;
+        this.message = message;
     }
 
     public String getMessage() {
@@ -23,6 +23,14 @@ public  class BusEventDefault {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getEvent() {
+        return event;
+    }
+
+    public void setEvent(String event) {
+        this.event = event;
     }
 
     public Boolean getSuccess() {

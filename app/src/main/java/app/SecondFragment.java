@@ -91,7 +91,7 @@ public class SecondFragment extends Fragment {
     @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
     public void onEvent(BusEventDefault event) {
         swipeRefreshLayout.setRefreshing(false);
-        if (event.getMessage().equalsIgnoreCase("activeentries")) {
+        if (event.getEvent().equalsIgnoreCase("activeentries")) {
             if (event.getSuccess()) {
                 setlist();
             }
@@ -172,7 +172,7 @@ public class SecondFragment extends Fragment {
                         String data = barcode.getRawValue();
                         if (data.contains("%")) {
                             String[] scndata = data.split("%");
-                            String carRegistration = scndata[7];
+                            String carRegistration = scndata[6];
                             searchedt.setText(carRegistration);
                         }
                     }
