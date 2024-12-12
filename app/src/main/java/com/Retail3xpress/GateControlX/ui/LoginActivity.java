@@ -61,6 +61,7 @@ public class LoginActivity extends BaseActivity {
             public void onClick(View v) {
                 if (validate()) {
                     loginBtnCLick();
+
                 }
             }
         });

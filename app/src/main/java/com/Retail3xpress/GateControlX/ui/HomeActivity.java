@@ -15,6 +15,7 @@ import app.FirstFragment;
 import app.SecondFragment;
 import app.ThirdFragment;
 import busevent.LoginBusEvent;
+import busevent.NotificationBusEvent;
 import utils.Constant;
 import utils.SharedPref;
 import utils.Util;
@@ -40,6 +41,15 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
+
+    @Subscribe
+    public void onEvent(NotificationBusEvent loginBusEvent) {
+        hideProgress();
+        if (loginBusEvent.getStrEvent() == "YES") {
+
+        }
+    }
+
     @Override
     protected void create(Bundle bundle) {
         inflateView(R.layout.home_portrait,"",true);
@@ -60,9 +70,8 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
         bottomNavigationView
                 .setOnNavigationItemSelectedListener(this);
         bottomNavigationView.setSelectedItemId(R.id.tabhome);
-
         getActiveEntries();
-
+        getNotification();
     }
 
 

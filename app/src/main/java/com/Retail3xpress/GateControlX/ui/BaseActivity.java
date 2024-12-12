@@ -36,6 +36,7 @@ import app.GateMasterApplication;
 import busevent.BusEventDefault;
 import busevent.CheckOutBusEvent;
 import busevent.LoginBusEvent;
+import busevent.NotificationBusEvent;
 import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
@@ -49,6 +50,7 @@ import db.DatabaseConnection;
 import model.ActiveEntriesResponse;
 import model.GetGatesResponse;
 import model.LogoutResponse;
+import model.NotificationResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -679,6 +681,42 @@ public abstract class BaseActivity extends AppCompatActivity {
                 public void onFailure(Call<TokenRefreshModel> call, Throwable t) {
                     Log.e("TokenRefresh", "Token refresh failed", t);
                     EventBus.getDefault().post(new LoginBusEvent("NO", 0, t.getMessage()));
+                }
+            });
+        }
+    }
+
+
+
+    public void getNotification() {
+        showProgress();
+        String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        if (!currentToken.isEmpty()) {
+            Call<NotificationResponse> call = gateApi.getNotification("Bearer " + currentToken);
+
+            call.enqueue(new Callback<NotificationResponse>() {
+                @Override
+                public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        databaseConnection.deleteTable("Notifications");
+                        databaseConnection.insertNotification(response.body());
+                        Log.d("NotificationResponse==========", response.body().toString());
+                        EventBus.getDefault().post(new NotificationBusEvent("YES", response.message()));
+                    } else {
+                        try {
+                            EventBus.getDefault().post(new NotificationBusEvent("NO", getErrorFromResponse(response.errorBody().string())));
+                        } catch (IOException e) {
+                            EventBus.getDefault().post(new NotificationBusEvent("NO", e.getMessage().toString()));
+                            throw new RuntimeException(e);
+                        }
+                        Log.e("getNotification", "getNotification failed: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<NotificationResponse> call, Throwable t) {
+                    Log.e("getNotification", "getNotification failed", t);
+                    EventBus.getDefault().post(new NotificationBusEvent("NO",  t.getMessage()));
                 }
             });
         }

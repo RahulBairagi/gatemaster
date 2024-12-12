@@ -12,7 +12,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
 
 
 /**

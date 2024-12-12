@@ -20,6 +20,7 @@ import datamodel.VersionDetailRequest;
 import model.ActiveEntriesResponse;
 import model.GetGatesResponse;
 import model.LogoutResponse;
+import model.NotificationResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -59,6 +60,10 @@ public interface GateApi {
 
     @POST("guard/refresh")
     Call<TokenRefreshModel> refreshToken(@Header("Authorization") String authToken);
+
+
+    @GET("guard/notifications")
+    Call<NotificationResponse> getNotification(@Header("Authorization") String authToken);
 
 
 

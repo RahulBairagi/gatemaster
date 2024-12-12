@@ -15,4 +15,13 @@
         <item name="backgroundTint">@null</item>  <!-- Disable tint to avoid white color -->
     </style>
 
+    <style name="FullScreenBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/FullScreenBottomSheet</item>
+    </style>
+
+    <style name="FullScreenBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="behavior_peekHeight">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
 </resources>

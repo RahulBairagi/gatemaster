@@ -3,12 +3,21 @@ package app;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mobile.gatemaster.R;
+import com.Retail3xpress.GateControlX.R;
+
+import java.util.List;
+
+import adapter.NotificationAdapter;
+import db.DatabaseConnection;
+import model.NotificationModel;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +34,9 @@ public class ThirdFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private DatabaseConnection databaseConnection;
+
 
     public ThirdFragment() {
         // Required empty public constructor
@@ -61,6 +73,16 @@ public class ThirdFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_third, container, false);
+        View view = inflater.inflate(R.layout.notification, container, false);
+        databaseConnection = new DatabaseConnection(getContext());
+        RecyclerView recyclerView = view.findViewById(R.id.rv_notifications);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Fetch data and set adapter
+        List<NotificationModel> notifications = databaseConnection.getNotifications();
+        NotificationAdapter adapter = new NotificationAdapter(notifications);
+        recyclerView.setAdapter(adapter);
+
+        return  view;
     }
 }

@@ -8,22 +8,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.Retail3xpress.GateControlX.ui.HomeActivity;
-
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import busevent.BusEventDefault;
-import datamodel.CustomerInvoiceDataModel;
 import datamodel.InvoiceDataModel;
 import model.ActiveEntriesResponse;
 import model.GateEntry;
 import model.GateResponseData;
 import model.GetGatesResponse;
+import model.NotificationModel;
+import model.NotificationResponse;
 import model.ResponseData;
 
 public class DatabaseConnection extends SQLiteOpenHelper {
@@ -66,7 +62,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_Gates = "CREATE TABLE IF NOT EXISTS Gates (id INTEGER PRIMARY KEY, gate_id TEXT, location TEXT, entry_type TEXT, status INTEGER, client_id INTEGER, created_type TEXT, modified_type TEXT, created_at TEXT, updated_at TEXT);";
 
-
+    private static final String CREATE_TABLE_Notifications = "CREATE TABLE IF NOT EXISTS Notifications (id INTEGER PRIMARY KEY, title TEXT, descriptions TEXT, expiry_date TEXT, notify_type TEXT, status TEXT, guard_id INTEGER, client_id INTEGER, created_type TEXT, created_by INTEGER, modified_type TEXT, modified_by INTEGER, created_at TEXT, updated_at TEXT, expiry_time TEXT);";
 
 
     public DatabaseConnection(Context context) {
@@ -82,7 +78,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_SIGNATUREDETAIL);
         db.execSQL(CREATE_TABLE_GATE_ENTRIES);
         db.execSQL(CREATE_TABLE_Gates);
-
+        db.execSQL(CREATE_TABLE_Notifications);
 
           }
 
@@ -94,6 +90,8 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_SIGNATUREDETAIL);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_GATE_ENTRIES);
         db.execSQL("drop table if exists"+" "+CREATE_TABLE_Gates);
+        db.execSQL("drop table if exists"+" "+CREATE_TABLE_Notifications);
+
         onCreate(db);
     }
 
@@ -325,6 +323,73 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         }
         return locationGateIdMap;
     }
+
+
+    public void insertNotification(NotificationResponse data) {
+        SQLiteDatabase sq = null;
+        try {
+            sq = this.getWritableDatabase();
+            if (data != null && data.getResponseData() != null) {
+                ContentValues contentValues = new ContentValues();
+                for (NotificationResponse.ResponseData entry : data.getResponseData()) {
+                    contentValues.clear();
+
+                    contentValues.put("id", entry.getId());
+                    contentValues.put("title", entry.getTitle());
+                    contentValues.put("descriptions", entry.getDescriptions());
+                    contentValues.put("expiry_date", entry.getExpiryDate());
+                    contentValues.put("notify_type", entry.getNotifyType());
+                    contentValues.put("status", entry.getStatus());
+                    contentValues.put("guard_id", entry.getGuardId());
+                    contentValues.put("client_id", entry.getClientId());
+                    contentValues.put("created_type", entry.getCreatedType());
+                    contentValues.put("created_by", entry.getCreatedBy());
+                    contentValues.put("modified_type", entry.getModifiedType());
+                    contentValues.put("modified_by", entry.getModifiedBy());
+                    contentValues.put("created_at", entry.getCreatedAt());
+                    contentValues.put("updated_at", entry.getUpdatedAt());
+                    contentValues.put("expiry_time", entry.getExpiryTime());
+
+                    long result = sq.insert("Notifications", null, contentValues);
+                    Log.d(TAG, "Notifications: Insert result =============> " + result);
+                }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Notifications: Exception =============> " + e.getMessage());
+        } finally {
+            if (sq != null) {
+                sq.close();
+            }
+        }
+    }
+
+
+    public List<NotificationModel> getNotifications() {
+        List<NotificationModel> notificationList = new ArrayList<>();
+        SQLiteDatabase sq = null;
+        Cursor cursor = null;
+
+        try {
+            sq = this.getReadableDatabase();
+            cursor = sq.query("Notifications", new String[]{"title", "descriptions"}, null, null, null, null, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    String title = cursor.getString(cursor.getColumnIndexOrThrow("title"));
+                    String description = cursor.getString(cursor.getColumnIndexOrThrow("descriptions"));
+                    notificationList.add(new NotificationModel(title, description));
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d("TAG", "getNotifications: Exception =============> " + e.getMessage());
+        } finally {
+            if (cursor != null) cursor.close();
+            if (sq != null) sq.close();
+        }
+
+        return notificationList;
+    }
+
 
 
 

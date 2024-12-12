@@ -8,7 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.mobile.gatemaster.R;
+
+import com.Retail3xpress.GateControlX.R;
 
 import java.util.List;
 

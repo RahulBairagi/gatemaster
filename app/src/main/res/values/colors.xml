@@ -17,4 +17,7 @@
     <color name="buttontheme">#74649c</color>
     <color name="lightbuttontheme">#A490E2</color>
     <color name="purple">#64558e</color>
+    <color name="blue">#0066cb</color>
+
+
 </resources>
