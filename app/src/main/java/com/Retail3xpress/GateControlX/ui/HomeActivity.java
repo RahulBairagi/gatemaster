@@ -73,6 +73,7 @@ public class HomeActivity extends BaseActivity implements BottomNavigationView.O
                 Util.showOKAlert(this, "Please check your internet connection and try again later");
             }
         }else{
+            updatefcmtoken();
             getActiveEntries();
             getNotification();
         }

@@ -26,7 +26,7 @@ public class DatabaseConnection extends SQLiteOpenHelper {
 
     SQLiteDatabase sq;
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static DatabaseConnection mInstance = null;
 
     private static final String DATABASE_NAME = "GateMaster.db";
@@ -45,7 +45,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
     @Override
     public void onOpen(SQLiteDatabase db) {
         super.onOpen(db);
-
         db.disableWriteAheadLogging();
     }
 
@@ -153,13 +152,6 @@ public class DatabaseConnection extends SQLiteOpenHelper {
         Cursor res = sq.rawQuery("select  customerName,transactionId,customerAcct, signatureNotRequired from InvoiceDetail", null);
         return res;
     }
-
-
-    //Edited by Aayush -
-    public void save_checkin(){
-
-    }
-
 
     public void insertGateEntries(ActiveEntriesResponse data) {
         try {
