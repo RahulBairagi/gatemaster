@@ -135,8 +135,6 @@ public class FirstFragment extends Fragment {
         baseActivity.hideProgress();
         if (event.getStrEvent().equalsIgnoreCase("YES")) {
             Util.showToast(baseActivity,event.getStatus());
-        }else {
-            Util.showToast(baseActivity,event.getStatus());
         }
     }
 
