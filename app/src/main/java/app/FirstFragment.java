@@ -26,10 +26,15 @@ import com.Retail3xpress.GateControlX.ui.VisitorCheckInActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.Retail3xpress.GateControlX.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import adapter.AlertAdapter;
+import busevent.BusEventDefault;
+import busevent.PanicBusEvent;
 import db.DatabaseConnection;
 import model.AlertItem;
 import utils.Constant;
@@ -52,6 +57,8 @@ public class FirstFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private BaseActivity baseActivity;
+
 
     private RecyclerView recyclerView;
     private AlertAdapter adapter;
@@ -96,6 +103,7 @@ public class FirstFragment extends Fragment {
     }
 
     private void init(View view) {
+        baseActivity = (BaseActivity) this.getActivity();
         databaseConnection = new DatabaseConnection(getContext());
         recyclerView = view.findViewById(R.id.recyclerView);
         guardinfolbl = view.findViewById(R.id.guardname_lbl);
@@ -108,9 +116,28 @@ public class FirstFragment extends Fragment {
                 Util.pushNext(getActivity(), VisitorCheckInActivity.class);
             }
         });
-
         panicbtn.setText("PANIC");
 
+        panicbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Util.isNetworkAvailable(baseActivity)) {
+                    baseActivity.panicAction();
+                }
+            }
+        });
+
+
+    }
+
+    @Subscribe(threadMode = org.greenrobot.eventbus.ThreadMode.MAIN)
+    public void onEvent(PanicBusEvent event) {
+        baseActivity.hideProgress();
+        if (event.getStrEvent().equalsIgnoreCase("YES")) {
+            Util.showToast(baseActivity,event.getStatus());
+        }else {
+            Util.showToast(baseActivity,event.getStatus());
+        }
     }
 
     private void initRecycleView() {
@@ -145,5 +172,17 @@ public class FirstFragment extends Fragment {
         initRecycleView();
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

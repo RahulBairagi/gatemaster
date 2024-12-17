@@ -37,6 +37,7 @@ import busevent.BusEventDefault;
 import busevent.CheckOutBusEvent;
 import busevent.LoginBusEvent;
 import busevent.NotificationBusEvent;
+import busevent.PanicBusEvent;
 import busevent.VisiteeDetails;
 import datamodel.LoginDataModel;
 import datamodel.PostCheckIn;
@@ -53,6 +54,7 @@ import model.ActiveEntriesResponse;
 import model.GetGatesResponse;
 import model.LogoutResponse;
 import model.NotificationResponse;
+import model.PanicResponse;
 import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit.GateApi;
@@ -665,7 +667,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Log.d("TokenRefresh", "Run()");
-                    refreshToken();
+
+                    if (Util.isNetworkAvailable(BaseActivity.this)) {
+                        refreshToken();
+                    }
+
                 }
             };
         }
@@ -722,6 +728,40 @@ public abstract class BaseActivity extends AppCompatActivity {
             });
         }
     }
+
+
+    public void panicAction() {
+        showProgress();
+        String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
+        if (!currentToken.isEmpty()) {
+            Call<PanicResponse> call = gateApi.panicActionCall("Bearer " + currentToken);
+
+            call.enqueue(new Callback<PanicResponse>() {
+                @Override
+                public void onResponse(Call<PanicResponse> call, Response<PanicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        EventBus.getDefault().post(new PanicBusEvent("YES", response.body().getMessage()));
+                        Log.d("panicAction", "panicAction successfully");
+                    } else {
+                        try {
+                            EventBus.getDefault().post(new PanicBusEvent("NO", getErrorFromResponse(response.errorBody().string())));
+                        } catch (IOException e) {
+                            EventBus.getDefault().post(new PanicBusEvent("NO",  e.getMessage().toString()));
+                            throw new RuntimeException(e);
+                        }
+                        Log.e("panicAction", "panicAction failed: " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PanicResponse> call, Throwable t) {
+                    Log.e("panicAction", "panicAction failed", t);
+                    EventBus.getDefault().post(new PanicBusEvent("NO",  t.getMessage()));
+                }
+            });
+        }
+    }
+
 
     public void getNotification() {
         String currentToken = sharedPref.getString(Constant.PREF_AUTH_TOKEN);
