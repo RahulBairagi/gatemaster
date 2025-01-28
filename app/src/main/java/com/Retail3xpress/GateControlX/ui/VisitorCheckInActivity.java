@@ -206,7 +206,7 @@ public class VisitorCheckInActivity extends BaseActivity {
                 }
             }
         });
-        carRegistrationEditText.addTextChangedListener(new TextWatcher() {
+        /*carRegistrationEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -240,7 +240,7 @@ public class VisitorCheckInActivity extends BaseActivity {
                     carRegistrationEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 }
             }
-        });
+        });*/
         purposeinptxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
